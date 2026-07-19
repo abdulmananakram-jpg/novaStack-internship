@@ -17,63 +17,49 @@ themeToggle.addEventListener('click', () => {
 const fields = {
   fullName: {
     element: document.getElementById('fullName'),
-    validate: (val) => val.trim().length >= 2 ? '' : 'Name must be at least 2 characters.',
+    validate: (v) => v.trim().length >= 2 ? '' : 'Name must be at least 2 characters.',
   },
   email: {
     element: document.getElementById('email'),
-    validate: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? '' : 'Please enter a valid email.',
+    validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Please enter a valid email.',
   },
   subject: {
     element: document.getElementById('subject'),
-    validate: (val) => val.trim().length >= 3 ? '' : 'Subject must be at least 3 characters.',
+    validate: (v) => v.trim().length >= 3 ? '' : 'Subject must be at least 3 characters.',
   },
   message: {
     element: document.getElementById('message'),
-    validate: (val) => val.trim().length >= 10 ? '' : 'Message must be at least 10 characters.',
+    validate: (v) => v.trim().length >= 10 ? '' : 'Message must be at least 10 characters.',
   },
 };
 
-function showError(field, message) {
-  const group = field.element.closest('.form-floating');
-  group.classList.add('error');
-  group.querySelector('.error-msg').textContent = message;
-}
-
-function clearError(field) {
-  const group = field.element.closest('.form-floating');
-  group.classList.remove('error');
-  group.querySelector('.error-msg').textContent = '';
+function toggleError(name, show, msg) {
+  const group = fields[name].element.closest('.form-group');
+  group.classList.toggle('error', show);
+  group.querySelector('.error-msg').textContent = msg || '';
 }
 
 function validateField(name) {
-  const field = fields[name];
-  const err = field.validate(field.element.value);
-  if (err) { showError(field, err); return false; }
-  clearError(field);
-  return true;
+  const err = fields[name].validate(fields[name].element.value);
+  toggleError(name, !!err, err);
+  return !err;
 }
 
-Object.values(fields).forEach((field) => {
-  field.element.addEventListener('blur', () => {
-    const name = Object.keys(fields).find((k) => fields[k] === field);
-    validateField(name);
-  });
-  field.element.addEventListener('input', () => {
-    if (field.element.closest('.form-floating').classList.contains('error')) {
-      const name = Object.keys(fields).find((k) => fields[k] === field);
-      validateField(name);
-    }
+Object.keys(fields).forEach((name) => {
+  const el = fields[name].element;
+  el.addEventListener('blur', () => validateField(name));
+  el.addEventListener('input', () => {
+    if (el.closest('.form-group').classList.contains('error')) validateField(name);
   });
 });
 
-const messageField = fields.message.element;
-messageField.addEventListener('input', () => {
-  charCount.textContent = messageField.value.length;
-  if (messageField.value.length > 1000) messageField.value = messageField.value.slice(0, 1000);
+fields.message.element.addEventListener('input', () => {
+  charCount.textContent = fields.message.element.value.length;
+  if (fields.message.element.value.length > 1000) fields.message.element.value = fields.message.element.value.slice(0, 1000);
 });
 
-function showToast(message) {
-  toastMsg.textContent = message;
+function showToast(msg) {
+  toastMsg.textContent = msg;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
@@ -82,45 +68,39 @@ function fireConfetti() {
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
-  const particles = Array.from({ length: 150 }, () => ({
+  const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+  const p = Array.from({ length: 180 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height - canvas.height,
     w: Math.random() * 8 + 4,
-    h: Math.random() * 6 + 2,
-    color: ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'][Math.floor(Math.random() * 5)],
-    vx: (Math.random() - 0.5) * 3,
-    vy: Math.random() * 3 + 2,
+    h: Math.random() * 6 + 3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 4,
+    vy: Math.random() * 4 + 3,
     rot: Math.random() * 360,
-    rotSpeed: (Math.random() - 0.5) * 10,
+    rs: (Math.random() - 0.5) * 12,
   }));
-
-  let frame = 0;
-  function animate() {
+  let f = 0;
+  function anim() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((p) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.rot += p.rotSpeed;
+    p.forEach((pt) => {
+      pt.x += pt.vx; pt.y += pt.vy; pt.rot += pt.rs;
       ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate((p.rot * Math.PI) / 180);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.translate(pt.x, pt.y);
+      ctx.rotate((pt.rot * Math.PI) / 180);
+      ctx.globalAlpha = Math.max(0, 1 - f / 120);
+      ctx.fillStyle = pt.color;
+      ctx.fillRect(-pt.w / 2, -pt.h / 2, pt.w, pt.h);
       ctx.restore();
     });
-    frame++;
-    if (frame < 120) requestAnimationFrame(animate);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (++f < 120) requestAnimationFrame(anim);
   }
-  animate();
+  anim();
 }
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  let valid = true;
-  Object.keys(fields).forEach((name) => { if (!validateField(name)) valid = false; });
+  let valid = Object.keys(fields).every(validateField);
   if (!valid) return;
 
   submitBtn.disabled = true;
@@ -129,12 +109,11 @@ form.addEventListener('submit', async (e) => {
 
   await new Promise((r) => setTimeout(r, 1200));
 
+  Object.keys(fields).forEach((n) => toggleError(n, false));
   form.reset();
-  Object.keys(fields).forEach((n) => clearError(fields[n]));
   charCount.textContent = '0';
   form.hidden = true;
   successMsg.hidden = false;
-
   submitBtn.disabled = false;
   btnText.hidden = false;
   btnLoader.hidden = true;
@@ -146,11 +125,4 @@ form.addEventListener('submit', async (e) => {
 document.getElementById('resetBtn').addEventListener('click', () => {
   successMsg.hidden = true;
   form.hidden = false;
-});
-
-window.addEventListener('resize', () => {
-  if (canvas.width !== window.innerWidth) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
 });
