@@ -1,6 +1,5 @@
-const API_KEY = 'b207d8e682d24f9f918160502261907';
+const API_KEY = 'YOUR_API_KEY_HERE'; // Get a free key at https://openweathermap.org/api
 
-const form = document.getElementById('searchForm');
 const input = document.getElementById('searchInput');
 const suggestions = document.getElementById('suggestions');
 const geoBtn = document.getElementById('geoBtn');
@@ -82,7 +81,12 @@ async function fetchWeather(city) {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=${currentUnit}&appid=${API_KEY}`;
   try {
     const res = await fetch(url);
-    if (!res.ok) { if (res.status === 404) throw new Error('City not found'); throw new Error('Something went wrong'); }
+    if (!res.ok) {
+      if (res.status === 404) throw new Error('City not found');
+      if (res.status === 401) throw new Error('Invalid API key. Get a free key at openweathermap.org');
+      if (res.status === 429) throw new Error('Too many requests. Please wait a moment.');
+      throw new Error(`Error ${res.status}: ${res.statusText}`);
+    }
     const data = await res.json();
     displayWeather(data);
     fetchForecast(city);
@@ -98,7 +102,7 @@ async function fetchForecast(city) {
     const res = await fetch(url);
     const data = await res.json();
     displayForecast(data);
-  } catch { /* ignore forecast errors */ }
+  } catch { forecastSection.hidden = true; }
 }
 
 function displayWeather(data) {
@@ -230,4 +234,11 @@ input.addEventListener('keydown', (e) => {
     const city = input.value.trim();
     if (city) fetchWeather(city);
   }
+});
+
+document.getElementById('searchForm')?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  suggestions.classList.remove('active');
+  const city = input.value.trim();
+  if (city) fetchWeather(city);
 });
