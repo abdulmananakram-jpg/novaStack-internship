@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Learning Platform — NovaStack</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #070a14;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+    }
+    .card {
+      max-width: 520px;
+      text-align: center;
+      background: #0f1322;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 48px 32px;
+    }
+    .icon { font-size: 48px; margin-bottom: 16px; }
+    h1 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    h1 span { color: #6366f1; }
+    p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
+    .code {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 13px;
+      color: #94a3b8;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    .code .cmd { color: #6366f1; }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .back { display: inline-block; margin-top: 16px; font-size: 13px; color: #475569; text-decoration: none; }
+    .back:hover { color: #6366f1; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">⚛️</div>
+    <h1>Nova<span>Learn</span> — MERN Stack App</h1>
+    <p>This project requires a local development environment. It uses React + Vite for the frontend and Express + MongoDB for the backend.</p>
+    <div class="code">
+      <div><span class="cmd">cd server && npm install && npm run dev</span></div>
+      <div><span class="cmd">cd client && npm install && npm run dev</span></div>
+    </div>
+    <a href="https://github.com/abdulmananakram-jpg/novaStack-internship/tree/master/task5-elearning-platform" class="btn" target="_blank">View Source on GitHub</a>
+    <br>
+    <a href="../" class="back">&larr; Back to Projects</a>
+  </div>
+</body>
+</html>
