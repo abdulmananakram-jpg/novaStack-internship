@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer — NovaStack</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⏱️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <div class="app">
+    <div class="container">
+
+      <h1 class="app-title"><i class="fas fa-clock"></i> Countdown<span>Timer</span></h1>
+
+      <div class="setup-card" id="setupCard">
+        <div class="presets">
+          <span class="preset-label">Quick Presets</span>
+          <div class="preset-btns">
+            <button class="preset-btn" data-preset="newyear"><i class="fas fa-champagne-glasses"></i> New Year</button>
+            <button class="preset-btn" data-preset="birthday"><i class="fas fa-cake-candles"></i> Birthday</button>
+            <button class="preset-btn" data-preset="launch"><i class="fas fa-rocket"></i> Launch</button>
+            <button class="preset-btn" data-preset="custom"><i class="fas fa-pen"></i> Custom</button>
+          </div>
+        </div>
+        <div class="date-picker" id="datePicker">
+          <i class="fas fa-calendar"></i>
+          <input type="datetime-local" id="datetimeInput">
+        </div>
+        <button class="btn btn-primary" id="startBtn"><i class="fas fa-play"></i> Start Countdown</button>
+      </div>
+
+      <div class="countdown-card" id="countdownCard" hidden>
+        <div class="timer-display">
+          <div class="time-unit">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" id="ringDays" cx="60" cy="60" r="52" stroke="var(--primary)"/>
+            </svg>
+            <div class="flip-card">
+              <div class="flip-inner" id="flipDays">
+                <div class="flip-front">00</div>
+                <div class="flip-back">00</div>
+              </div>
+            </div>
+            <span class="time-label">Days</span>
+          </div>
+          <div class="time-unit">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" id="ringHours" cx="60" cy="60" r="52" stroke="var(--accent)"/>
+            </svg>
+            <div class="flip-card">
+              <div class="flip-inner" id="flipHours">
+                <div class="flip-front">00</div>
+                <div class="flip-back">00</div>
+              </div>
+            </div>
+            <span class="time-label">Hours</span>
+          </div>
+          <div class="time-unit">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" id="ringMins" cx="60" cy="60" r="52" stroke="#10b981"/>
+            </svg>
+            <div class="flip-card">
+              <div class="flip-inner" id="flipMins">
+                <div class="flip-front">00</div>
+                <div class="flip-back">00</div>
+              </div>
+            </div>
+            <span class="time-label">Minutes</span>
+          </div>
+          <div class="time-unit">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" id="ringSecs" cx="60" cy="60" r="52" stroke="#f59e0b"/>
+            </svg>
+            <div class="flip-card">
+              <div class="flip-inner" id="flipSecs">
+                <div class="flip-front">00</div>
+                <div class="flip-back">00</div>
+              </div>
+            </div>
+            <span class="time-label">Seconds</span>
+          </div>
+        </div>
+        <div class="timer-target" id="targetDisplay"></div>
+        <div class="timer-controls">
+          <button class="btn btn-outline" id="resetBtn"><i class="fas fa-undo"></i> Set New</button>
+        </div>
+      </div>
+
+      <div class="times-up" id="timesUp" hidden>
+        <div class="times-up-icon">🎉</div>
+        <h2>Time's Up!</h2>
+        <p>Your countdown has finished.</p>
+        <button class="btn btn-primary" id="timesUpReset"><i class="fas fa-redo"></i> Set New Timer</button>
+      </div>
+
+    </div>
+  </div>
+
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App — NovaStack</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🌤️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <div class="app-container">
+    <header class="app-header">
+      <h1 class="app-title"><i class="fas fa-cloud-sun"></i> Weather<span>App</span></h1>
+
+      <div class="search-section">
+        <div class="search-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="searchInput" placeholder="Search a city..." autocomplete="off">
+          <button class="geo-btn" id="geoBtn" type="button" aria-label="Use my location" title="Use my location">
+            <i class="fas fa-location-dot"></i>
+          </button>
+        </div>
+        <div class="suggestions" id="suggestions"></div>
+        <div class="search-controls">
+          <span class="unit-toggle" id="unitToggle">
+            <span class="unit active" data-unit="metric">°C</span>
+            <span class="unit" data-unit="imperial">°F</span>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="weather-skeleton" id="skeleton">
+      <div class="sk-card">
+        <div class="sk-icon"></div>
+        <div class="sk-line w-40"></div>
+        <div class="sk-line w-24"></div>
+        <div class="sk-line w-32"></div>
+      </div>
+      <div class="sk-details">
+        <div class="sk-line w-20"></div>
+        <div class="sk-line w-20"></div>
+        <div class="sk-line w-20"></div>
+        <div class="sk-line w-20"></div>
+      </div>
+    </div>
+
+    <div class="weather-card" id="weatherCard" hidden>
+      <div class="weather-main">
+        <div class="weather-left">
+          <div class="weather-icon-container" id="weatherIconContainer">
+            <div class="weather-animated-icon" id="animatedIcon">
+              <i class="fas fa-sun" id="weatherSvgIcon"></i>
+            </div>
+          </div>
+          <div class="weather-temp">
+            <span id="temperature">--</span><span class="temp-unit">°C</span>
+          </div>
+          <p class="weather-condition" id="condition">--</p>
+        </div>
+        <div class="weather-right">
+          <div class="weather-location" id="location"><i class="fas fa-map-pin"></i> <span>--</span></div>
+          <div class="weather-stat">
+            <i class="fas fa-temperature-half"></i>
+            <div><span class="stat-label">Feels Like</span><span id="feelsLike">--°C</span></div>
+          </div>
+          <div class="weather-stat">
+            <i class="fas fa-droplet"></i>
+            <div><span class="stat-label">Humidity</span><span id="humidity">--%</span></div>
+          </div>
+          <div class="weather-stat">
+            <i class="fas fa-wind"></i>
+            <div><span class="stat-label">Wind</span><span id="windSpeed">-- km/h</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="forecast-section" id="forecastSection" hidden>
+        <h3><i class="fas fa-calendar-week"></i> 5-Day Forecast</h3>
+        <div class="forecast-strip" id="forecastStrip"></div>
+      </div>
+    </div>
+
+    <div class="error-card" id="errorCard" hidden>
+      <i class="fas fa-circle-exclamation"></i>
+      <h2>City Not Found</h2>
+      <p id="errorText">Please check the spelling and try again.</p>
+    </div>
+  </div>
+
+  <div class="animated-bg" id="animatedBg">
+    <div class="rain-drops" id="rainDrops"></div>
+    <div class="sun-rays" id="sunRays"></div>
+    <div class="cloud-layer" id="cloudLayer"></div>
+    <div class="snow-flakes" id="snowFlakes"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — NovaStack</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>✉️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <div class="split-layout">
+    <div class="split-left">
+      <div class="left-content">
+        <div class="left-blob"></div>
+        <div class="left-badge">Get in Touch</div>
+        <h1>Let's <span class="gradient-text">Create</span> Something Amazing</h1>
+        <p>Have a project in mind, a question about a collaboration, or just want to say hello? We're here and ready to talk.</p>
+        <div class="left-features">
+          <div class="left-feature">
+            <i class="fas fa-bolt"></i>
+            <span>Fast replies within 24 hours</span>
+          </div>
+          <div class="left-feature">
+            <i class="fas fa-shield-alt"></i>
+            <span>Your data stays private &amp; secure</span>
+          </div>
+          <div class="left-feature">
+            <i class="fas fa-handshake"></i>
+            <span>No spam, just real conversations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split-right">
+      <div class="form-card">
+        <form id="contactForm" novalidate>
+          <h2>Send a Message</h2>
+          <p class="form-subtitle">Fill in the details below and we'll get back to you.</p>
+
+          <div class="form-floating">
+            <input type="text" id="fullName" placeholder=" " required>
+            <label for="fullName">Full Name</label>
+            <span class="error-msg"></span>
+          </div>
+
+          <div class="form-floating">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">Email Address</label>
+            <span class="error-msg"></span>
+          </div>
+
+          <div class="form-floating">
+            <input type="text" id="subject" placeholder=" " required>
+            <label for="subject">Subject</label>
+            <span class="error-msg"></span>
+          </div>
+
+          <div class="form-floating">
+            <textarea id="message" rows="5" placeholder=" " required></textarea>
+            <label for="message">Your Message</label>
+            <div class="char-counter"><span id="charCount">0</span> / 1000</div>
+            <span class="error-msg"></span>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">Send Message <i class="fas fa-paper-plane"></i></span>
+            <span class="btn-loader" hidden><i class="fas fa-spinner fa-spin"></i> Sending...</span>
+          </button>
+        </form>
+
+        <div class="success-message" id="successMessage" hidden>
+          <div class="checkmark-container">
+            <svg class="checkmark" viewBox="0 0 52 52">
+              <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+              <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
+            </svg>
+          </div>
+          <h3>Message Sent!</h3>
+          <p>Thank you for reaching out. We'll respond within 24 hours.</p>
+          <button class="reset-btn" id="resetBtn">Send Another <i class="fas fa-redo"></i></button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Message sent!</span>
+  </div>
+
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
