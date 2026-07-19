@@ -1,4 +1,4 @@
-const API_KEY = 'YOUR_API_KEY_HERE'; // Get a free key at https://openweathermap.org/api
+const API_KEY = '01ce25d29338e8b878d33e9b78dcc5d1';
 
 const input = document.getElementById('searchInput');
 const suggestions = document.getElementById('suggestions');
