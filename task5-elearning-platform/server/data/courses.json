@@ -1,0 +1,167 @@
+[
+  {
+    "id": "course-1",
+    "title": "Full-Stack Web Development Bootcamp",
+    "description": "Master HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build and deploy 5 real-world projects from scratch. Covers everything from frontend to backend, authentication, APIs, and database design.",
+    "category": "Web Development",
+    "instructor": "John Doe",
+    "price": "Free",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "HTML5 & Semantic Markup", "duration": "45 min" },
+      { "title": "CSS3 Flexbox & Grid", "duration": "50 min" },
+      { "title": "JavaScript Fundamentals", "duration": "60 min" },
+      { "title": "DOM Manipulation & Events", "duration": "45 min" },
+      { "title": "React Components & Props", "duration": "55 min" },
+      { "title": "State Management with Hooks", "duration": "50 min" },
+      { "title": "Node.js & Express Basics", "duration": "50 min" },
+      { "title": "REST API Design", "duration": "45 min" },
+      { "title": "MongoDB & Mongoose", "duration": "50 min" },
+      { "title": "JWT Authentication", "duration": "40 min" },
+      { "title": "Deployment with Vercel & Render", "duration": "35 min" },
+      { "title": "Final Capstone Project", "duration": "90 min" }
+    ]
+  },
+  {
+    "id": "course-2",
+    "title": "Introduction to Artificial Intelligence",
+    "description": "Understand the core concepts of AI, machine learning, and neural networks. Implement search algorithms, knowledge representation, and basic ML models in Python.",
+    "category": "AI & ML",
+    "instructor": "Dr. Sarah Khan",
+    "price": "$49.99",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "What is AI?", "duration": "30 min" },
+      { "title": "Search Algorithms (BFS, DFS, A*)", "duration": "55 min" },
+      { "title": "Knowledge Representation", "duration": "45 min" },
+      { "title": "Introduction to Machine Learning", "duration": "50 min" },
+      { "title": "Supervised vs Unsupervised Learning", "duration": "40 min" },
+      { "title": "Neural Networks Basics", "duration": "55 min" },
+      { "title": "Ethics in AI", "duration": "35 min" },
+      { "title": "Final Project: AI Agent", "duration": "80 min" }
+    ]
+  },
+  {
+    "id": "course-3",
+    "title": "React.js Masterclass",
+    "description": "Deep dive into React 18 — components, hooks, context API, React Router, performance optimization, and testing. Build a complete e-commerce SPA.",
+    "category": "Web Development",
+    "instructor": "Alex Chen",
+    "price": "$39.99",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "JSX & Component Architecture", "duration": "45 min" },
+      { "title": "Props, State & Lifecycle", "duration": "50 min" },
+      { "title": "useState & useEffect Deep Dive", "duration": "55 min" },
+      { "title": "useContext & useReducer", "duration": "50 min" },
+      { "title": "React Router v6", "duration": "45 min" },
+      { "title": "Custom Hooks", "duration": "40 min" },
+      { "title": "Performance Optimization (memo, useMemo)", "duration": "45 min" },
+      { "title": "Testing with Jest & React Testing Library", "duration": "50 min" },
+      { "title": "Building & Deploying an E-Commerce App", "duration": "90 min" },
+      { "title": "Bonus: Next.js Introduction", "duration": "40 min" }
+    ]
+  },
+  {
+    "id": "course-4",
+    "title": "Python for Data Science",
+    "description": "Learn Python programming from scratch with a focus on data analysis, visualization, and machine learning using Pandas, NumPy, Matplotlib, and Scikit-learn.",
+    "category": "Data Science",
+    "instructor": "Maria Garcia",
+    "price": "Free",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "Python Basics & Data Types", "duration": "50 min" },
+      { "title": "Control Flow & Functions", "duration": "45 min" },
+      { "title": "NumPy Arrays & Operations", "duration": "55 min" },
+      { "title": "Pandas DataFrames", "duration": "60 min" },
+      { "title": "Data Cleaning Techniques", "duration": "50 min" },
+      { "title": "Matplotlib & Seaborn Visualization", "duration": "55 min" },
+      { "title": "Introduction to Machine Learning with Scikit-learn", "duration": "60 min" },
+      { "title": "Regression & Classification Models", "duration": "55 min" },
+      { "title": "Model Evaluation & Validation", "duration": "45 min" },
+      { "title": "Final Data Analysis Project", "duration": "90 min" },
+      { "title": "Capstone: End-to-End Data Pipeline", "duration": "80 min" },
+      { "title": "Career Tips for Data Scientists", "duration": "30 min" },
+      { "title": "Bonus: Introduction to Deep Learning", "duration": "50 min" },
+      { "title": "Course Wrap-Up & Resources", "duration": "20 min" }
+    ]
+  },
+  {
+    "id": "course-5",
+    "title": "Flutter Mobile Development",
+    "description": "Build cross-platform mobile apps with Flutter and Dart. Cover widgets, state management, navigation, APIs, and publish to both iOS and Android stores.",
+    "category": "Mobile Development",
+    "instructor": "Ahmed Hassan",
+    "price": "$59.99",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "Dart Language Fundamentals", "duration": "50 min" },
+      { "title": "Flutter Widget Tree & Layouts", "duration": "55 min" },
+      { "title": "Stateful vs Stateless Widgets", "duration": "45 min" },
+      { "title": "Navigation & Routing", "duration": "40 min" },
+      { "title": "State Management with Provider", "duration": "55 min" },
+      { "title": "REST API Integration", "duration": "50 min" },
+      { "title": "Local Storage with SQLite", "duration": "45 min" },
+      { "title": "Animations & Custom Painting", "duration": "50 min" },
+      { "title": "Publishing to App Store & Play Store", "duration": "40 min" }
+    ]
+  },
+  {
+    "id": "course-6",
+    "title": "Node.js Backend API Design",
+    "description": "Build robust, scalable backend APIs with Node.js, Express, and PostgreSQL. Learn authentication, file uploads, rate limiting, and API documentation.",
+    "category": "Backend",
+    "instructor": "Priya Sharma",
+    "price": "Free",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "Node.js Runtime Overview", "duration": "30 min" },
+      { "title": "Express Router & Middleware", "duration": "45 min" },
+      { "title": "Request Validation & Error Handling", "duration": "40 min" },
+      { "title": "JWT Authentication & Authorization", "duration": "50 min" },
+      { "title": "File Upload with Multer", "duration": "35 min" },
+      { "title": "Rate Limiting & Security Headers", "duration": "40 min" },
+      { "title": "API Documentation with Swagger", "duration": "45 min" }
+    ]
+  },
+  {
+    "id": "course-7",
+    "title": "UI/UX Design Fundamentals",
+    "description": "Learn the principles of user interface and user experience design. Cover wireframing, prototyping, color theory, typography, and usability testing using Figma.",
+    "category": "UI/UX Design",
+    "instructor": "Emma Wilson",
+    "price": "$29.99",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "Design Thinking Process", "duration": "35 min" },
+      { "title": "User Research & Personas", "duration": "45 min" },
+      { "title": "Wireframing & Low-Fidelity Prototypes", "duration": "50 min" },
+      { "title": "Visual Hierarchy & Layout", "duration": "40 min" },
+      { "title": "Color Theory & Accessibility", "duration": "45 min" },
+      { "title": "Typography & Iconography", "duration": "35 min" }
+    ]
+  },
+  {
+    "id": "course-8",
+    "title": "Deep Learning with TensorFlow",
+    "description": "Dive into neural networks, CNNs, RNNs, and transformers. Implement models for image classification, NLP, and time-series forecasting using TensorFlow 2.x and Keras.",
+    "category": "AI & ML",
+    "instructor": "Dr. James Park",
+    "price": "$79.99",
+    "thumbnail": "",
+    "lessons": [
+      { "title": "TensorFlow Basics & Tensors", "duration": "45 min" },
+      { "title": "Building Sequential Models", "duration": "50 min" },
+      { "title": "Convolutional Neural Networks", "duration": "60 min" },
+      { "title": "Data Augmentation & Transfer Learning", "duration": "55 min" },
+      { "title": "Recurrent Neural Networks & LSTMs", "duration": "55 min" },
+      { "title": "NLP with Transformers & BERT", "duration": "60 min" },
+      { "title": "Time-Series Forecasting", "duration": "50 min" },
+      { "title": "Model Deployment with TensorFlow Serving", "duration": "45 min" },
+      { "title": "GANs & Generative Models", "duration": "55 min" },
+      { "title": "Final Project: End-to-End DL Pipeline", "duration": "120 min" },
+      { "title": "Bonus: TensorFlow Lite for Mobile", "duration": "40 min" }
+    ]
+  }
+]

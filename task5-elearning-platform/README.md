@@ -1,46 +1,47 @@
-# E-Learning Platform — NovaStack Hub Internship (Task 5)
+# NovaLearn — E-Learning Platform
 
-A full-stack MERN e-learning platform with course management, user authentication, and a protected dashboard.
+A full-stack e-learning platform built with **Express.js** (backend) and **vanilla HTML/CSS/JS** (frontend).
 
-## Features
-- Home page with course listing (fetched from API)
-- Course detail page with enrollment CTA
-- User signup/login with JWT authentication
-- Protected dashboard to add, edit, delete courses
-- Responsive dark-theme UI with Tailwind CSS
+## Why JSON files instead of MongoDB?
 
-## Tech Stack
-- **Frontend:** React 18, React Router 6, Tailwind CSS, Vite
-- **Backend:** Node.js, Express, MongoDB (Mongoose), JWT, bcryptjs
+This project uses JSON file storage (`fs` module) instead of a real database — a deliberate choice to keep the internship submission zero-config. No MongoDB, no Docker, no cloud setup needed.
 
-## How to Run Locally
+## How to Run
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-
-### 1. Server
 ```bash
 cd server
-npm install
-# Copy and configure environment variables
-cp ../.env.example ../.env
-# Edit .env with your MongoDB URI and JWT secret
-npm run dev
+npm install    # only needed once
+npm run dev    # starts on http://localhost:5000
 ```
 
-### 2. Client
-```bash
-cd client
-npm install
-npm run dev
+Then open `http://localhost:5000` in your browser (Express serves the frontend as static files).
+
+## Folder Structure
+
+```
+task5-elearning-platform/
+├── server/
+│   ├── server.js
+│   ├── routes/          # courses.js, auth.js, enrollments.js
+│   ├── middleware/       # auth.js (JWT verification)
+│   ├── data/             # JSON files (courses.json, users.json, enrollments.json)
+│   ├── utils/            # fileDB.js (readJSON/writeJSON helpers)
+│   └── package.json
+├── public/
+│   ├── index.html        # Home — course grid with search & filter
+│   ├── course.html       # Course detail + enrollment
+│   ├── login.html        # Login / Signup
+│   ├── dashboard.html    # Enrolled courses with progress tracking
+│   ├── css/style.css
+│   └── js/               # home.js, course.js, auth.js, dashboard.js
+└── README.md
 ```
 
-The client runs on `http://localhost:5173` and proxies API requests to the server on `http://localhost:5000`.
+## Features
 
-## Environment Variables (`.env`)
-| Variable | Description |
-|----------|-------------|
-| `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret key for signing JWT tokens |
-| `PORT` | Server port (default 5000) |
+- Browse courses by category or search
+- View course details with lesson list
+- Signup / Login with JWT auth
+- Enroll in courses
+- Track progress — mark lessons complete
+- Dark/light theme support

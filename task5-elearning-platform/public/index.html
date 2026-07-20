@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaLearn — E-Learning Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">Nova<span>Learn</span></a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/login.html" id="loginLink">Login</a></li>
+      <li><a href="/dashboard.html" id="dashboardLink" style="display:none">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main class="page">
+    <section class="hero">
+      <h1>Learn. Build. <span>Grow.</span></h1>
+      <p>Explore free and premium courses curated for aspiring developers and designers.</p>
+      <div class="search-filter">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search courses..." autocomplete="off">
+          <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="category-chips" id="categoryChips"></div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="course-grid" id="courseGrid"></div>
+      <div class="course-grid" id="skeletonGrid">
+        <div class="skeleton-card"><div class="sk-line w-20"></div><div class="sk-line w-60"></div><div class="sk-line w-40"></div><div class="sk-line w-80"></div></div>
+        <div class="skeleton-card"><div class="sk-line w-20"></div><div class="sk-line w-60"></div><div class="sk-line w-40"></div><div class="sk-line w-80"></div></div>
+        <div class="skeleton-card"><div class="sk-line w-20"></div><div class="sk-line w-60"></div><div class="sk-line w-40"></div><div class="sk-line w-80"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/home.js"></script>
+</body>
+</html>
