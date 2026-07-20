@@ -1,5 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap');
 
+[data-theme="light"] {
+  --color-base-100: #FAFAFA;
+  --color-base-200: #F8FAFC;
+  --color-base-300: #FFFFFF;
+  --color-base-content: #0F172A;
+  --color-primary: #2563EB;
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #0F172A;
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #2563EB;
+  --color-accent-content: #FFFFFF;
+  --color-neutral: #E2E8F0;
+  --color-neutral-content: #0F172A;
+  --color-info: #3B82F6;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --border: 1px;
+}
+
 ::selection { background: var(--color-primary); color: white; }
 
 html { scroll-behavior: smooth; }
