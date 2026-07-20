@@ -82,6 +82,9 @@ html { scroll-behavior: smooth; }
 
 #mobileMenu.open { display: flex; }
 
+.active-link { color: var(--color-base-content); }
+.active-link::after { width: 100%; }
+
 /* Dock */
 .dock {
   position: fixed;
