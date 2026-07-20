@@ -1,0 +1,19 @@
+{
+  "name": "task2-personal-website",
+  "version": "1.0.0",
+  "description": "A modern, one-page personal portfolio website built with vanilla HTML, CSS, and JavaScript.",
+  "main": "script.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "daisyui": "^5.6.18",
+    "tailwindcss": "^4.3.3"
+  }
+}

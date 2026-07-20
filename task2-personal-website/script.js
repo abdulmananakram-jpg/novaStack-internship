@@ -1,8 +1,8 @@
 const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
+const mobileMenu = document.getElementById('mobileMenu');
 const sections = document.querySelectorAll('section[id]');
-const navAnchors = document.querySelectorAll('.nav-links a');
+const navAnchors = document.querySelectorAll('.navbar a[href^="#"]');
 const themeToggle = document.getElementById('themeToggle');
 const backToTop = document.getElementById('backToTop');
 
@@ -11,18 +11,20 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 if (!prefersReduced) {
   const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   heroTl
-    .from('.hero-badge', { opacity: 0, y: 30, duration: 0.6 })
-    .from('.hero-title', { opacity: 0, y: 50, duration: 0.8 }, '-=0.3')
-    .from('.hero-subtitle', { opacity: 0, y: 30, duration: 0.6 }, '-=0.5')
-    .from('.hero-tagline', { opacity: 0, y: 20, duration: 0.5 }, '-=0.3')
-    .from('.hero-stats', { opacity: 0, y: 30, duration: 0.6 }, '-=0.2')
-    .from('.hero-actions', { opacity: 0, y: 20, duration: 0.5 }, '-=0.3');
+    .from('#heroBadge', { opacity: 0, y: 30, duration: 0.6 })
+    .from('#heroTitle', { opacity: 0, y: 50, duration: 0.8 }, '-=0.3')
+    .from('#heroSubtitle', { opacity: 0, y: 30, duration: 0.6 }, '-=0.5')
+    .from('#heroTagline', { opacity: 0, y: 20, duration: 0.5 }, '-=0.3')
+    .from('#heroStats', { opacity: 0, y: 30, duration: 0.6 }, '-=0.2')
+    .from('#heroActions', { opacity: 0, y: 20, duration: 0.5 }, '-=0.3');
 
   gsap.utils.toArray('.reveal').forEach((el) => {
-    gsap.from(el, {
-      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
-      opacity: 0, y: 50, duration: 0.9, ease: 'power3.out',
-    });
+    gsap.fromTo(el,
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
+      }
+    );
   });
 }
 
@@ -32,7 +34,7 @@ if (!prefersReduced) {
     ScrollTrigger.create({
       trigger: stat, start: 'top 85%',
       onEnter: () => {
-        gsap.to(stat, { innerHTML: target, duration: 2.5, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        gsap.to(stat, { innerHTML: target, duration: 2, snap: { innerHTML: 1 }, ease: 'power2.out' });
       },
     });
   });
@@ -76,20 +78,21 @@ window.addEventListener('scroll', () => {
 });
 
 navToggle.addEventListener('click', () => {
-  navToggle.classList.toggle('active');
-  navLinks.classList.toggle('open');
+  mobileMenu?.classList.toggle('open');
 });
 
-navAnchors.forEach((a) => {
+document.querySelectorAll('#mobileMenu a').forEach((a) => {
   a.addEventListener('click', () => {
-    navToggle.classList.remove('active');
-    navLinks.classList.remove('open');
+    mobileMenu?.classList.remove('open');
   });
 });
 
 themeToggle.addEventListener('click', () => {
-  const current = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  themeToggle.classList.toggle('swap-active');
 });
 
 backToTop.addEventListener('click', () => {
@@ -106,11 +109,11 @@ if (!prefersReduced) {
 }
 
 let carouselIndex = 0;
-const track = document.querySelector('.testimonial-track');
+const track = document.getElementById('testimonialTrack');
 const dots = document.getElementById('carouselDots');
-const cards = document.querySelectorAll('.testimonial-card');
+const cards = track?.querySelectorAll(':scope > div');
 
-if (cards.length && dots) {
+if (cards?.length && dots) {
   cards.forEach((_, i) => {
     const dot = document.createElement('span');
     dot.addEventListener('click', () => goToSlide(i));
@@ -138,50 +141,57 @@ if (form) {
   const emailInput = document.getElementById('email');
   const msgInput = document.getElementById('msg');
   const charCount = document.getElementById('charCount');
+  const nameError = document.getElementById('nameError');
+  const emailError = document.getElementById('emailError');
+  const msgError = document.getElementById('msgError');
 
   msgInput?.addEventListener('input', () => {
     if (charCount) charCount.textContent = msgInput.value.length;
-    if (msgInput.value.length > 500) msgInput.value = msgInput.value.slice(0, 500);
   });
 
-  function validateField(input) {
-    const group = input.closest('.form-floating');
-    const err = group.querySelector('.error-msg');
+  function validateField(input, errorEl) {
     if (!input.value.trim()) {
-      group.classList.add('error');
-      err.textContent = 'This field is required.';
+      errorEl.textContent = 'This field is required.';
+      errorEl.classList.remove('hidden');
+      input.classList.add('input-error');
       return false;
     }
     if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
-      group.classList.add('error');
-      err.textContent = 'Please enter a valid email.';
+      errorEl.textContent = 'Please enter a valid email.';
+      errorEl.classList.remove('hidden');
+      input.classList.add('input-error');
       return false;
     }
-    group.classList.remove('error');
-    err.textContent = '';
+    errorEl.classList.add('hidden');
+    input.classList.remove('input-error');
     return true;
   }
 
   [nameInput, emailInput, msgInput].forEach((el) => {
     if (!el) return;
-    el.addEventListener('blur', () => validateField(el));
+    const err = el.id === 'name' ? nameError : el.id === 'email' ? emailError : msgError;
+    el.addEventListener('blur', () => validateField(el, err));
     el.addEventListener('input', () => {
-      if (el.closest('.form-floating')?.classList.contains('error')) validateField(el);
+      if (el.classList.contains('input-error')) validateField(el, err);
     });
   });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const valid = [nameInput, emailInput, msgInput].every((el) => el && validateField(el));
+    const valid = [
+      validateField(nameInput, nameError),
+      validateField(emailInput, emailError),
+      validateField(msgInput, msgError),
+    ].every(Boolean);
     if (!valid) return;
 
     form.innerHTML = `
-      <div class="success-message" style="text-align:center;padding:40px 0;animation:fadeIn 0.4s ease;">
-        <div class="success-icon" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;color:white;">
+      <div class="text-center py-10 animate-[fadeIn_0.4s_ease]">
+        <div class="size-16 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center mx-auto mb-5 text-2xl text-white">
           <i class="fas fa-check"></i>
         </div>
-        <h3 style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:8px;">Message Sent!</h3>
-        <p style="color:var(--text-secondary);font-size:14px;">Thank you! I'll get back to you within 24 hours.</p>
+        <h3 class="font-outfit text-2xl font-bold mb-2 text-base-content">Message Sent!</h3>
+        <p class="text-sm text-base-content/60">Thank you! I'll get back to you within 24 hours.</p>
       </div>
     `;
   });

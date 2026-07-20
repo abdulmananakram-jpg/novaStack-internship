@@ -7,322 +7,423 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⚡</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="./output.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="min-h-screen bg-base-300 text-base-content transition-colors duration-300">
 
   <div class="cursor-follower" id="cursorFollower"></div>
 
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-    <i class="fas fa-moon"></i>
-    <i class="fas fa-sun"></i>
-  </button>
+  <div class="fixed bottom-24 right-6 z-[999] flex flex-col gap-3">
+    <button class="btn btn-square btn-soft btn-primary swap swap-rotate size-12 rounded-xl shadow-2xl backdrop-blur-xl" id="themeToggle" aria-label="Toggle theme">
+      <i class="fas fa-moon swap-off text-xl"></i>
+      <i class="fas fa-sun swap-on text-xl"></i>
+    </button>
+    <button class="btn btn-square btn-ghost size-12 rounded-xl shadow-2xl backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-350" id="backToTop" aria-label="Back to top">
+      <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+  </div>
 
-  <button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#hero" class="nav-logo">AMA<span class="accent">.</span></a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#hero" class="active">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
+  <div class="navbar fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-350" id="navbar">
+    <div class="max-w-6xl mx-auto w-full flex items-center justify-between">
+      <a href="#hero" class="text-2xl font-extrabold tracking-tight no-underline text-base-content">
+        AMA<span class="text-primary">.</span>
+      </a>
+      <ul class="hidden md:flex items-center gap-9 list-none">
+        <li><a href="#hero" class="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors duration-350 relative py-1 active-link">Home</a></li>
+        <li><a href="#about" class="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors duration-350 relative py-1">About</a></li>
+        <li><a href="#skills" class="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors duration-350 relative py-1">Skills</a></li>
+        <li><a href="#projects" class="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors duration-350 relative py-1">Projects</a></li>
+        <li><a href="#contact" class="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors duration-350 relative py-1">Contact</a></li>
       </ul>
-      <button class="nav-toggle" id="navToggle" aria-label="Menu">
-        <span></span><span></span><span></span>
+      <button class="btn btn-square btn-ghost md:hidden" id="navToggle" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block size-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-  </nav>
+    <div class="md:hidden absolute top-full left-0 right-0 bg-base-300/98 backdrop-blur-xl border-b border-base-300/20 hidden flex-col p-6 gap-4" id="mobileMenu">
+      <a href="#hero" class="text-base font-medium active-link">Home</a>
+      <a href="#about" class="text-base font-medium">About</a>
+      <a href="#skills" class="text-base font-medium">Skills</a>
+      <a href="#projects" class="text-base font-medium">Projects</a>
+      <a href="#contact" class="text-base font-medium">Contact</a>
+    </div>
+  </div>
 
-  <section class="hero" id="hero">
-    <div class="hero-blob"></div>
-    <div class="hero-blob hero-blob--2"></div>
-    <div class="container">
-      <div class="hero-content">
-        <span class="hero-badge" id="heroBadge">Available for Internships</span>
-        <h1 class="hero-title" id="heroTitle">
-          Hi, I'm <span class="gradient-text">Abdul Manan Akram</span>
+  <section class="hero min-h-screen flex items-center relative overflow-hidden pt-20" id="hero">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(99,102,241,0.08)_0%,transparent_50%),radial-gradient(ellipse_at_70%_80%,rgba(236,72,153,0.06)_0%,transparent_50%)]"></div>
+    <div class="container max-w-6xl mx-auto px-6 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <span class="badge badge-primary badge-soft badge-lg mb-7 px-5 py-3 text-xs tracking-wide" id="heroBadge">Available for Internships</span>
+        <h1 class="font-outfit text-5xl md:text-7xl font-extrabold leading-tight tracking-tighter mb-4" id="heroTitle">
+          Hi, I'm <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Abdul Manan Akram</span>
         </h1>
-        <p class="hero-subtitle" id="heroSubtitle">Full-Stack Software Developer <span class="accent">|</span> AI &amp; Computer Vision</p>
-        <p class="hero-tagline" id="heroTagline">Building production-grade applications across web, AI, IoT, and mobile platforms.</p>
-        <div class="hero-stats" id="heroStats">
-          <div class="hero-stat"><span class="stat-num" data-target="6">0</span><span class="stat-label">Projects</span></div>
-          <div class="hero-stat"><span class="stat-num" data-target="3">0</span><span class="stat-label">Years Coding</span></div>
-          <div class="hero-stat"><span class="stat-num" data-target="8">0</span><span class="stat-label">Tech Stacks</span></div>
+        <p class="text-xl md:text-2xl text-base-content/70 font-medium mb-3" id="heroSubtitle">
+          Full-Stack Software Developer <span class="text-primary">|</span> AI &amp; Computer Vision
+        </p>
+        <p class="text-base text-base-content/50 max-w-xl mx-auto mb-10 leading-relaxed" id="heroTagline">
+          Building production-grade applications across web, AI, IoT, and mobile platforms.
+        </p>
+        <div class="flex justify-center gap-12 md:gap-16 mb-11" id="heroStats">
+          <div class="text-center">
+            <span class="stat-num font-outfit text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" data-target="6">0</span>
+            <span class="block text-xs text-base-content/50 font-medium mt-1">Projects</span>
+          </div>
+          <div class="text-center">
+            <span class="stat-num font-outfit text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" data-target="3">0</span>
+            <span class="block text-xs text-base-content/50 font-medium mt-1">Years Coding</span>
+          </div>
+          <div class="text-center">
+            <span class="stat-num font-outfit text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" data-target="8">0</span>
+            <span class="block text-xs text-base-content/50 font-medium mt-1">Tech Stacks</span>
+          </div>
         </div>
-        <div class="hero-actions" id="heroActions">
-          <a href="#projects" class="btn btn-primary"><span>View My Work</span><i class="fas fa-arrow-right"></i></a>
-          <a href="#contact" class="btn btn-outline">Get in Touch</a>
+        <div class="flex gap-4 justify-center flex-wrap" id="heroActions">
+          <a href="#projects" class="btn btn-primary btn-lg rounded-xl shadow-lg shadow-primary/25">
+            <span>View My Work</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+          <a href="#contact" class="btn btn-outline btn-lg rounded-xl">Get in Touch</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="about" id="about">
-    <div class="container">
-      <h2 class="section-title reveal">About <span class="gradient-text">Me</span></h2>
-      <div class="about-grid">
-        <div class="about-image reveal">
-          <div class="image-frame">
-            <div class="image-placeholder">
+  <section class="py-24 md:py-32 bg-base-200" id="about">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h2 class="font-outfit text-4xl md:text-5xl font-extrabold text-center mb-16 tracking-tight reveal">
+        About <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Me</span>
+      </h2>
+      <div class="grid md:grid-cols-[320px_1fr] gap-12 md:gap-16 items-start">
+        <div class="reveal">
+          <div class="relative rounded-2xl overflow-hidden">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_200%] animate-[border-rotate_4s_linear_infinite] rounded-2xl"></div>
+            <div class="relative z-10 m-0.5 bg-base-300 rounded-2xl aspect-square flex items-center justify-center text-7xl text-base-content/30">
               <i class="fas fa-user-astronaut"></i>
             </div>
           </div>
-          <div class="about-social">
-            <a href="https://linkedin.com/in/abdulmananakram" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://github.com/abdulmananakram" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="mailto:abdulmananakram777@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <div class="flex justify-center gap-3 mt-6">
+            <a href="https://linkedin.com/in/abdulmananakram" target="_blank" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/abdulmananakram" target="_blank" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:abdulmananakram777@gmail.com" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="Email"><i class="fas fa-envelope"></i></a>
           </div>
         </div>
-        <div class="about-text reveal">
-          <p>Results-driven Software Engineering student at <strong>COMSATS University Islamabad</strong> (GPA: 3.16/4.0, consistently improving) with hands-on experience in full-stack web development, AI/computer vision, IoT systems, and mobile applications. Proven ability to design and ship production-grade applications across web, desktop, and embedded platforms.</p>
-          <p>I specialize in building end-to-end systems — from pixel-perfect React frontends to scalable FastAPI backends and real-time computer vision pipelines. Actively seeking a software engineering internship to apply technical expertise in a collaborative, fast-paced environment.</p>
-          <div class="about-details">
-            <div><i class="fas fa-user"></i> <strong>Name:</strong> Abdul Manan Akram</div>
-            <div><i class="fas fa-map-pin"></i> <strong>Location:</strong> Lahore, Pakistan</div>
-            <div><i class="fas fa-graduation-cap"></i> <strong>Education:</strong> COMSATS University (BSSE)</div>
-            <div><i class="fas fa-envelope"></i> <strong>Email:</strong> abdulmananakram777@gmail.com</div>
-            <div><i class="fas fa-phone"></i> <strong>Phone:</strong> +92 307 6823669</div>
-            <div><i class="fas fa-star"></i> <strong>GPA:</strong> 3.16 / 4.0</div>
+        <div class="reveal space-y-4">
+          <p class="text-base text-base-content/70 leading-relaxed">
+            Results-driven Software Engineering student at <strong class="text-base-content">COMSATS University Islamabad</strong> (GPA: 3.16/4.0, consistently improving) with hands-on experience in full-stack web development, AI/computer vision, IoT systems, and mobile applications. Proven ability to design and ship production-grade applications across web, desktop, and embedded platforms.
+          </p>
+          <p class="text-base text-base-content/70 leading-relaxed">
+            I specialize in building end-to-end systems — from pixel-perfect React frontends to scalable FastAPI backends and real-time computer vision pipelines. Actively seeking a software engineering internship to apply technical expertise in a collaborative, fast-paced environment.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-user w-4 text-primary text-center"></i> <strong class="text-base-content">Name:</strong> Abdul Manan Akram
+            </div>
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-map-pin w-4 text-primary text-center"></i> <strong class="text-base-content">Location:</strong> Lahore, Pakistan
+            </div>
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-graduation-cap w-4 text-primary text-center"></i> <strong class="text-base-content">Education:</strong> COMSATS University (BSSE)
+            </div>
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-envelope w-4 text-primary text-center"></i> <strong class="text-base-content">Email:</strong> abdulmananakram777@gmail.com
+            </div>
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-phone w-4 text-primary text-center"></i> <strong class="text-base-content">Phone:</strong> +92 307 6823669
+            </div>
+            <div class="flex items-center gap-2.5 px-4 py-3 bg-base-300/50 border border-base-300/20 rounded-lg text-sm text-base-content/70">
+              <i class="fas fa-star w-4 text-primary text-center"></i> <strong class="text-base-content">GPA:</strong> 3.16 / 4.0
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="skills" id="skills">
-    <div class="container">
-      <h2 class="section-title reveal">Technical <span class="gradient-text">Skills</span></h2>
-      <div class="skills-categories">
-        <div class="skill-category reveal">
-          <h3><i class="fas fa-code"></i> Languages</h3>
-          <div class="skills-bars">
-            <div class="skill-bar-item"><span>Java</span><div class="bar"><div class="bar-fill" data-width="90"></div></div></div>
-            <div class="skill-bar-item"><span>Python</span><div class="bar"><div class="bar-fill" data-width="88"></div></div></div>
-            <div class="skill-bar-item"><span>JavaScript / TypeScript</span><div class="bar"><div class="bar-fill" data-width="85"></div></div></div>
-            <div class="skill-bar-item"><span>C++</span><div class="bar"><div class="bar-fill" data-width="80"></div></div></div>
-            <div class="skill-bar-item"><span>Dart</span><div class="bar"><div class="bar-fill" data-width="75"></div></div></div>
-            <div class="skill-bar-item"><span>SQL / PHP</span><div class="bar"><div class="bar-fill" data-width="78"></div></div></div>
+  <section class="py-24 md:py-32" id="skills">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h2 class="font-outfit text-4xl md:text-5xl font-extrabold text-center mb-16 tracking-tight reveal">
+        Technical <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Skills</span>
+      </h2>
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="reveal">
+          <h3 class="font-outfit text-lg font-bold mb-7 flex items-center gap-2.5 text-base-content">
+            <span class="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary text-sm"><i class="fas fa-code"></i></span>
+            Languages
+          </h3>
+          <div class="flex flex-col gap-5">
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">Java</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="90"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">Python</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="88"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">JavaScript / TypeScript</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="85"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">C++</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="80"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">Dart</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="75"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">SQL / PHP</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="78"></div></div></div>
           </div>
         </div>
-        <div class="skill-category reveal">
-          <h3><i class="fas fa-layer-group"></i> Frameworks & Tools</h3>
-          <div class="skills-bars">
-            <div class="skill-bar-item"><span>React.js / Next.js</span><div class="bar"><div class="bar-fill" data-width="88"></div></div></div>
-            <div class="skill-bar-item"><span>Flutter / Dart</span><div class="bar"><div class="bar-fill" data-width="82"></div></div></div>
-            <div class="skill-bar-item"><span>FastAPI / Laravel</span><div class="bar"><div class="bar-fill" data-width="85"></div></div></div>
-            <div class="skill-bar-item"><span>OpenCV / MediaPipe</span><div class="bar"><div class="bar-fill" data-width="90"></div></div></div>
-            <div class="skill-bar-item"><span>MongoDB / Supabase</span><div class="bar"><div class="bar-fill" data-width="80"></div></div></div>
-            <div class="skill-bar-item"><span>Git / Docker / AWS</span><div class="bar"><div class="bar-fill" data-width="78"></div></div></div>
+        <div class="reveal">
+          <h3 class="font-outfit text-lg font-bold mb-7 flex items-center gap-2.5 text-base-content">
+            <span class="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary text-sm"><i class="fas fa-layer-group"></i></span>
+            Frameworks & Tools
+          </h3>
+          <div class="flex flex-col gap-5">
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">React.js / Next.js</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="88"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">Flutter / Dart</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="82"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">FastAPI / Laravel</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="85"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">OpenCV / MediaPipe</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="90"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">MongoDB / Supabase</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="80"></div></div></div>
+            <div><span class="text-sm font-medium text-base-content/70 flex justify-between mb-1.5">Git / Docker / AWS</span><div class="h-2.5 bg-base-300 rounded-full overflow-hidden"><div class="bar-fill h-full w-0 rounded-full bg-gradient-to-r from-primary to-secondary relative after:absolute after:right-0 after:top-0 after:w-5 after:h-full after:bg-white/20 after:rounded-full" data-width="78"></div></div></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="projects" id="projects">
-    <div class="container">
-      <h2 class="section-title reveal">Featured <span class="gradient-text">Projects</span></h2>
-      <div class="projects-grid">
-
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="#" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+  <section class="py-24 md:py-32 bg-base-200" id="projects">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h2 class="font-outfit text-4xl md:text-5xl font-extrabold text-center mb-16 tracking-tight reveal">
+        Featured <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Projects</span>
+      </h2>
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="#" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-film project-icon"></i>
+            <i class="fas fa-film text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags">
-              <span>Flutter</span><span>FastAPI</span><span>OpenAI Whisper</span><span>JWT</span>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">Flutter</span>
+              <span class="badge badge-primary badge-soft badge-sm">FastAPI</span>
+              <span class="badge badge-primary badge-soft badge-sm">OpenAI Whisper</span>
+              <span class="badge badge-primary badge-soft badge-sm">JWT</span>
             </div>
-            <h3>MovieAgent</h3>
-            <p>AI-powered cross-platform app that identifies movies from short video clips via speech transcription and semantic search. 3-stage ML pipeline with 50+ indexed transcripts.</p>
+            <h3 class="card-title font-outfit text-xl mb-2">MovieAgent</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">AI-powered cross-platform app that identifies movies from short video clips via speech transcription and semantic search. 3-stage ML pipeline with 50+ indexed transcripts.</p>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="https://kissanbazar.com" target="_blank" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="https://kissanbazar.com" target="_blank" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-leaf project-icon"></i>
+            <i class="fas fa-leaf text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags">
-              <span>React.js</span><span>Supabase</span><span>Drizzle ORM</span><span>Python</span>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">React.js</span>
+              <span class="badge badge-primary badge-soft badge-sm">Supabase</span>
+              <span class="badge badge-primary badge-soft badge-sm">Drizzle ORM</span>
+              <span class="badge badge-primary badge-soft badge-sm">Python</span>
             </div>
-            <h3>Kissan Bazar</h3>
-            <p>Full-stack agricultural marketplace connecting farmers with buyers. Handles 50+ concurrent users with AI price intelligence and seller analytics dashboard.</p>
+            <h3 class="card-title font-outfit text-xl mb-2">Kissan Bazar</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">Full-stack agricultural marketplace connecting farmers with buyers. Handles 50+ concurrent users with AI price intelligence and seller analytics dashboard.</p>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="#" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="#" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-running project-icon"></i>
+            <i class="fas fa-running text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags"><span>Python</span><span>OpenCV</span><span>MediaPipe</span><span>Real-time</span></div>
-            <h3>FitPose AI</h3>
-            <p>Real-time fitness app using Google MediaPipe for pose estimation. Angle-based rep counter achieving 95% accuracy with sub-100ms processing latency.</p>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">Python</span>
+              <span class="badge badge-primary badge-soft badge-sm">OpenCV</span>
+              <span class="badge badge-primary badge-soft badge-sm">MediaPipe</span>
+              <span class="badge badge-primary badge-soft badge-sm">Real-time</span>
+            </div>
+            <h3 class="card-title font-outfit text-xl mb-2">FitPose AI</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">Real-time fitness app using Google MediaPipe for pose estimation. Angle-based rep counter achieving 95% accuracy with sub-100ms processing latency.</p>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="#" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="#" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-university project-icon"></i>
+            <i class="fas fa-university text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags"><span>Java</span><span>Swing</span><span>JDBC</span><span>MySQL</span></div>
-            <h3>University Management System</h3>
-            <p>Enterprise desktop app managing student records, faculty data, enrollment, fees, and exams. Normalized schema reduced query time by 40%.</p>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">Java</span>
+              <span class="badge badge-primary badge-soft badge-sm">Swing</span>
+              <span class="badge badge-primary badge-soft badge-sm">JDBC</span>
+              <span class="badge badge-primary badge-soft badge-sm">MySQL</span>
+            </div>
+            <h3 class="card-title font-outfit text-xl mb-2">University Management System</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">Enterprise desktop app managing student records, faculty data, enrollment, fees, and exams. Normalized schema reduced query time by 40%.</p>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="#" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="#" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-robot project-icon"></i>
+            <i class="fas fa-robot text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags"><span>Java</span><span>OOP</span><span>Pattern Matching</span><span>NLP</span></div>
-            <h3>Intelligent Chatbot Engine</h3>
-            <p>Conversational chatbot with keyword-based pattern matching and dynamic response generation. Modular OOP structure for easy extension of dialogue trees.</p>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">Java</span>
+              <span class="badge badge-primary badge-soft badge-sm">OOP</span>
+              <span class="badge badge-primary badge-soft badge-sm">Pattern Matching</span>
+              <span class="badge badge-primary badge-soft badge-sm">NLP</span>
+            </div>
+            <h3 class="card-title font-outfit text-xl mb-2">Intelligent Chatbot Engine</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">Conversational chatbot with keyword-based pattern matching and dynamic response generation. Modular OOP structure for easy extension of dialogue trees.</p>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-overlay">
-              <a href="#" class="project-link-btn"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-              <a href="#" class="project-link-btn"><i class="fab fa-github"></i> Source</a>
+        <div class="card bg-base-300 border border-base-300/20 rounded-2xl overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 project-card">
+          <div class="relative aspect-[16/10] bg-gradient-to-br from-base-300 to-base-100 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-base-300/90 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 transition-opacity duration-400 hover:opacity-100">
+              <a href="#" class="btn btn-primary btn-sm rounded-lg shadow-lg shadow-primary/25"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+              <a href="#" class="btn btn-soft btn-sm rounded-lg bg-white/10 text-white border border-white/20"><i class="fab fa-github"></i> Source</a>
             </div>
-            <i class="fas fa-wifi project-icon"></i>
+            <i class="fas fa-wifi text-5xl text-base-content/30 transition-all duration-350 group-hover:scale-110 group-hover:text-primary group-hover:opacity-60"></i>
           </div>
-          <div class="project-info">
-            <div class="project-tags"><span>Cisco</span><span>IoT</span><span>Sensors</span><span>Real-time</span></div>
-            <h3>IoT Smoke Detection &amp; Plant Watering</h3>
-            <p>Intelligent IoT ecosystem integrating real-time smoke detection sensors with automated irrigation control. Faculty-recognized and university showcase selected.</p>
+          <div class="card-body p-7">
+            <div class="flex flex-wrap gap-1.5 mb-3">
+              <span class="badge badge-primary badge-soft badge-sm">Cisco</span>
+              <span class="badge badge-primary badge-soft badge-sm">IoT</span>
+              <span class="badge badge-primary badge-soft badge-sm">Sensors</span>
+              <span class="badge badge-primary badge-soft badge-sm">Real-time</span>
+            </div>
+            <h3 class="card-title font-outfit text-xl mb-2">IoT Smoke Detection &amp; Plant Watering</h3>
+            <p class="text-sm text-base-content/60 leading-relaxed">Intelligent IoT ecosystem integrating real-time smoke detection sensors with automated irrigation control. Faculty-recognized and university showcase selected.</p>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <section class="testimonials" id="testimonials">
-    <div class="container">
-      <h2 class="section-title reveal">What People <span class="gradient-text">Say</span></h2>
-      <div class="testimonial-carousel" id="testimonialCarousel">
-        <div class="testimonial-track">
-          <div class="testimonial-card">
-            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-            <p>"Abdul Manan demonstrates exceptional ability in full-stack development and AI. His work on the IoT project was faculty-recognized for its practical impact."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar"><i class="fas fa-user-tie"></i></div>
-              <div><strong>Faculty Member</strong><span>COMSATS University</span></div>
+  <section class="py-24 md:py-32" id="testimonials">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h2 class="font-outfit text-4xl md:text-5xl font-extrabold text-center mb-16 tracking-tight reveal">
+        What People <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Say</span>
+      </h2>
+      <div class="max-w-2xl mx-auto overflow-hidden bg-base-300 border border-base-300/20 rounded-2xl p-2" id="testimonialCarousel">
+        <div class="flex transition-transform duration-600 ease-out" id="testimonialTrack">
+          <div class="min-w-full py-12 px-8 md:px-12 text-center">
+            <div class="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-5 text-xl"><i class="fas fa-quote-left"></i></div>
+            <p class="text-lg md:text-xl text-base-content/70 leading-relaxed mb-7 italic">"Abdul Manan demonstrates exceptional ability in full-stack development and AI. His work on the IoT project was faculty-recognized for its practical impact."</p>
+            <div class="flex items-center justify-center gap-3.5">
+              <div class="size-12 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-lg"><i class="fas fa-user-tie"></i></div>
+              <div class="text-left"><strong class="block text-sm text-base-content">Faculty Member</strong><span class="text-xs text-base-content/50">COMSATS University</span></div>
             </div>
           </div>
-          <div class="testimonial-card">
-            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-            <p>"MovieAgent showcases his ability to architect complex ML pipelines and deliver cross-platform applications. A standout project in our program."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar"><i class="fas fa-user-graduate"></i></div>
-              <div><strong>Project Reviewer</strong><span>Software Engineering Dept.</span></div>
+          <div class="min-w-full py-12 px-8 md:px-12 text-center">
+            <div class="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-5 text-xl"><i class="fas fa-quote-left"></i></div>
+            <p class="text-lg md:text-xl text-base-content/70 leading-relaxed mb-7 italic">"MovieAgent showcases his ability to architect complex ML pipelines and deliver cross-platform applications. A standout project in our program."</p>
+            <div class="flex items-center justify-center gap-3.5">
+              <div class="size-12 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-lg"><i class="fas fa-user-graduate"></i></div>
+              <div class="text-left"><strong class="block text-sm text-base-content">Project Reviewer</strong><span class="text-xs text-base-content/50">Software Engineering Dept.</span></div>
             </div>
           </div>
-          <div class="testimonial-card">
-            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-            <p>"Kissan Bazar is a production-grade marketplace that solves real problems for farmers. The AI price intelligence feature is particularly impressive."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar"><i class="fas fa-user-tie"></i></div>
-              <div><strong>Industry Mentor</strong><span>Tech Incubator Program</span></div>
+          <div class="min-w-full py-12 px-8 md:px-12 text-center">
+            <div class="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-5 text-xl"><i class="fas fa-quote-left"></i></div>
+            <p class="text-lg md:text-xl text-base-content/70 leading-relaxed mb-7 italic">"Kissan Bazar is a production-grade marketplace that solves real problems for farmers. The AI price intelligence feature is particularly impressive."</p>
+            <div class="flex items-center justify-center gap-3.5">
+              <div class="size-12 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-lg"><i class="fas fa-user-tie"></i></div>
+              <div class="text-left"><strong class="block text-sm text-base-content">Industry Mentor</strong><span class="text-xs text-base-content/50">Tech Incubator Program</span></div>
             </div>
           </div>
         </div>
-        <div class="carousel-dots" id="carouselDots"></div>
+        <div class="flex justify-center gap-2 pb-6" id="carouselDots"></div>
       </div>
     </div>
   </section>
 
-  <section class="contact" id="contact">
-    <div class="container">
-      <h2 class="section-title reveal">Get in <span class="gradient-text">Touch</span></h2>
-      <p class="contact-subtitle reveal">Have a project, internship opportunity, or just want to connect? Let's talk.</p>
-      <div class="contact-grid">
-        <div class="contact-info reveal">
-          <div class="contact-item">
-            <i class="fas fa-envelope"></i>
-            <div><strong>Email</strong><span>abdulmananakram777@gmail.com</span></div>
+  <section class="py-24 md:py-32 bg-base-200" id="contact">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h2 class="font-outfit text-4xl md:text-5xl font-extrabold text-center mb-16 tracking-tight reveal">
+        Get in <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Touch</span>
+      </h2>
+      <p class="text-center text-base-content/60 mb-13 max-w-md mx-auto text-base reveal">
+        Have a project, internship opportunity, or just want to connect? Let's talk.
+      </p>
+      <div class="grid md:grid-cols-[1fr_1.5fr] gap-12 items-start">
+        <div class="flex flex-col gap-4 reveal">
+          <div class="flex items-center gap-4 p-4.5 bg-base-300 border border-base-300/20 rounded-xl hover:border-base-300/40 transition-colors">
+            <span class="flex items-center justify-center size-11 rounded-xl bg-primary/10 text-primary shrink-0"><i class="fas fa-envelope"></i></span>
+            <div><strong class="block text-xs text-base-content/50 uppercase tracking-wide">Email</strong><span class="text-sm text-base-content">abdulmananakram777@gmail.com</span></div>
           </div>
-          <div class="contact-item">
-            <i class="fas fa-phone-alt"></i>
-            <div><strong>Phone</strong><span>+92 307 6823669</span></div>
+          <div class="flex items-center gap-4 p-4.5 bg-base-300 border border-base-300/20 rounded-xl hover:border-base-300/40 transition-colors">
+            <span class="flex items-center justify-center size-11 rounded-xl bg-primary/10 text-primary shrink-0"><i class="fas fa-phone-alt"></i></span>
+            <div><strong class="block text-xs text-base-content/50 uppercase tracking-wide">Phone</strong><span class="text-sm text-base-content">+92 307 6823669</span></div>
           </div>
-          <div class="contact-item">
-            <i class="fas fa-map-marker-alt"></i>
-            <div><strong>Location</strong><span>Lahore, Pakistan</span></div>
+          <div class="flex items-center gap-4 p-4.5 bg-base-300 border border-base-300/20 rounded-xl hover:border-base-300/40 transition-colors">
+            <span class="flex items-center justify-center size-11 rounded-xl bg-primary/10 text-primary shrink-0"><i class="fas fa-map-marker-alt"></i></span>
+            <div><strong class="block text-xs text-base-content/50 uppercase tracking-wide">Location</strong><span class="text-sm text-base-content">Lahore, Pakistan</span></div>
           </div>
-          <div class="contact-social">
-            <a href="https://linkedin.com/in/abdulmananakram" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://github.com/abdulmananakram" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="mailto:abdulmananakram777@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <div class="flex gap-3 mt-2">
+            <a href="https://linkedin.com/in/abdulmananakram" target="_blank" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/abdulmananakram" target="_blank" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:abdulmananakram777@gmail.com" class="btn btn-square btn-soft btn-primary size-12 rounded-xl" aria-label="Email"><i class="fas fa-envelope"></i></a>
           </div>
         </div>
-        <form id="contactForm" class="contact-form reveal" novalidate>
-          <div class="form-floating">
-            <input type="text" id="name" placeholder=" " required>
-            <label for="name">Your Name</label>
-            <span class="error-msg"></span>
+        <form id="contactForm" class="flex flex-col gap-5 reveal" novalidate>
+          <label class="floating-label">
+            <span class="floating-label-text text-base-content/50">Your Name</span>
+            <input type="text" id="name" placeholder=" " class="input input-bordered w-full" required>
+          </label>
+          <div id="nameError" class="text-xs text-error -mt-3 hidden"></div>
+          <label class="floating-label">
+            <span class="floating-label-text text-base-content/50">Your Email</span>
+            <input type="email" id="email" placeholder=" " class="input input-bordered w-full" required>
+          </label>
+          <div id="emailError" class="text-xs text-error -mt-3 hidden"></div>
+          <label class="floating-label">
+            <span class="floating-label-text text-base-content/50">Your Message</span>
+            <textarea id="msg" rows="4" placeholder=" " class="textarea textarea-bordered w-full" maxlength="500" required></textarea>
+          </label>
+          <div class="flex justify-between items-center -mt-3">
+            <span id="msgError" class="text-xs text-error hidden"></span>
+            <span class="text-xs text-base-content/50 ml-auto"><span id="charCount">0</span> / 500</span>
           </div>
-          <div class="form-floating">
-            <input type="email" id="email" placeholder=" " required>
-            <label for="email">Your Email</label>
-            <span class="error-msg"></span>
-          </div>
-          <div class="form-floating">
-            <textarea id="msg" rows="4" placeholder=" " required></textarea>
-            <label for="msg">Your Message</label>
-            <div class="char-counter"><span id="charCount">0</span> / 500</div>
-            <span class="error-msg"></span>
-          </div>
-          <button type="submit" class="btn btn-primary"><span>Send Message</span><i class="fas fa-paper-plane"></i></button>
+          <button type="submit" class="btn btn-primary self-start mt-1 rounded-xl shadow-lg shadow-primary/25">
+            <span>Send Message</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
         </form>
       </div>
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-top">
-        <a href="#hero" class="footer-logo">AMA<span class="accent">.</span></a>
-        <p>Building the future, one line of code at a time.</p>
-      </div>
-      <div class="footer-bottom">
+  <div class="dock" id="dock">
+    <div class="dock-inner">
+      <a href="#hero" class="dock-item" data-tooltip="Home"><i class="fas fa-home"></i></a>
+      <a href="#about" class="dock-item" data-tooltip="About"><i class="fas fa-user"></i></a>
+      <a href="#skills" class="dock-item" data-tooltip="Skills"><i class="fas fa-code"></i></a>
+      <a href="#projects" class="dock-item" data-tooltip="Projects"><i class="fas fa-folder-open"></i></a>
+      <a href="#contact" class="dock-item" data-tooltip="Contact"><i class="fas fa-envelope"></i></a>
+      <span class="dock-divider"></span>
+      <a href="https://github.com/abdulmananakram" target="_blank" class="dock-item" data-tooltip="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://linkedin.com/in/abdulmananakram" target="_blank" class="dock-item" data-tooltip="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </div>
+
+  <footer class="border-t border-base-300/20 py-12">
+    <div class="container max-w-6xl mx-auto px-6 text-center">
+      <a href="#hero" class="text-2xl font-extrabold tracking-tight no-underline text-base-content">AMA<span class="text-primary">.</span></a>
+      <p class="text-sm text-base-content/50 mt-2">Building the future, one line of code at a time.</p>
+      <div class="flex justify-center gap-4 mt-8 pt-6 border-t border-base-300/20 text-sm text-base-content/50">
         <p>&copy; 2026 Abdul Manan Akram. All rights reserved.</p>
-        <div class="footer-links">
-          <a href="https://linkedin.com/in/abdulmananakram" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-          <a href="https://github.com/abdulmananakram" target="_blank"><i class="fab fa-github"></i></a>
-          <a href="mailto:abdulmananakram777@gmail.com"><i class="fas fa-envelope"></i></a>
+        <div class="flex gap-4">
+          <a href="https://linkedin.com/in/abdulmananakram" target="_blank" class="text-base-content/50 hover:text-primary transition-colors"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com/abdulmananakram" target="_blank" class="text-base-content/50 hover:text-primary transition-colors"><i class="fab fa-github"></i></a>
+          <a href="mailto:abdulmananakram777@gmail.com" class="text-base-content/50 hover:text-primary transition-colors"><i class="fas fa-envelope"></i></a>
         </div>
       </div>
     </div>
