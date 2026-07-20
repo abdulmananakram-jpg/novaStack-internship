@@ -1143,6 +1143,9 @@
   .h-2\.5 {
     height: calc(var(--spacing) * 2.5);
   }
+  .h-12 {
+    height: calc(var(--spacing) * 12);
+  }
   .h-full {
     height: 100%;
   }
@@ -1154,6 +1157,9 @@
   }
   .w-4 {
     width: calc(var(--spacing) * 4);
+  }
+  .w-12 {
+    width: calc(var(--spacing) * 12);
   }
   .w-full {
     width: 100%;
@@ -1342,8 +1348,8 @@
       border-color: color-mix(in oklab, var(--color-white) 20%, transparent);
     }
   }
-  .bg-\[\#0F172A\]\/85 {
-    background-color: color-mix(in oklab, #0F172A 85%, transparent);
+  .bg-\[\#0b1020\]\/85 {
+    background-color: color-mix(in oklab, #0b1020 85%, transparent);
   }
   .bg-base-200 {
     background-color: var(--color-base-200);
@@ -1429,8 +1435,8 @@
       --btn-shadow: 0 0 0 0 oklch(0% 0 0/0);
     }
   }
-  .bg-\[radial-gradient\(ellipse_at_30\%_20\%\,rgba\(37\,99\,235\,0\.08\)_0\%\,transparent_50\%\)\,radial-gradient\(ellipse_at_70\%_80\%\,rgba\(37\,99\,235\,0\.04\)_0\%\,transparent_50\%\)\] {
-    background-image: radial-gradient(ellipse at 30% 20%,rgba(37,99,235,0.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(37,99,235,0.04) 0%,transparent 50%);
+  .bg-\[radial-gradient\(ellipse_at_30\%_20\%\,rgba\(46\,95\,255\,0\.10\)_0\%\,transparent_50\%\)\,radial-gradient\(ellipse_at_70\%_80\%\,rgba\(20\,42\,110\,0\.06\)_0\%\,transparent_50\%\)\] {
+    background-image: radial-gradient(ellipse at 30% 20%,rgba(46,95,255,0.10) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(20,42,110,0.06) 0%,transparent 50%);
   }
   .from-primary {
     --tw-gradient-from: var(--color-primary);
@@ -1695,6 +1701,10 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
+  .duration-200 {
+    --tw-duration: 200ms;
+    transition-duration: 200ms;
+  }
   .duration-300 {
     --tw-duration: 300ms;
     transition-duration: 300ms;
@@ -1805,11 +1815,17 @@
         border-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
       }
     }
+    .hover\:bg-primary:hover {
+      background-color: var(--color-primary);
+    }
     .hover\:text-base-content:hover {
       color: var(--color-base-content);
     }
     .hover\:text-primary:hover {
       color: var(--color-primary);
+    }
+    .hover\:text-primary-content:hover {
+      color: var(--color-primary-content);
     }
     .hover\:opacity-100:hover {
       opacity: 100%;
