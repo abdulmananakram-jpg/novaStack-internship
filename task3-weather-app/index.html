@@ -1,142 +1,168 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="day">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WeatherApp — NovaStack</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🌤️</text></svg>">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <canvas id="particleCanvas"></canvas>
-
-  <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-    <i class="fas fa-moon"></i>
-    <i class="fas fa-sun"></i>
+  <!-- ========== ANIMATED BACKGROUND LAYERS ========== -->
+  <div class="bg-layer" id="bgLayer">
+    <!-- Sun (clear/day) -->
+    <div class="sun" id="sun"></div>
+    <!-- Moon (clear/night) -->
+    <div class="moon" id="moon"></div>
+    <!-- Drifting clouds (cloudy) -->
+    <div class="cloud-shape cloud-1"></div>
+    <div class="cloud-shape cloud-2"></div>
+    <div class="cloud-shape cloud-3"></div>
+    <!-- Rain layer (rainy) -->
+    <div class="rain-layer" id="rainLayer"></div>
+    <!-- Snow layer (snowy) -->
+    <div class="snow-layer" id="snowLayer"></div>
+    <!-- Thunder flash (thunderstorm) -->
+    <div class="thunder-flash" id="thunderFlash"></div>
+    <!-- Fog layer (mist) -->
+    <div class="fog-layer" id="fogLayer"></div>
+    <!-- Stars (night) -->
+    <div class="stars" id="stars"></div>
   </div>
 
-  <div class="app-container">
-    <header class="app-header">
-      <h1 class="app-title"><i class="fas fa-cloud-sun"></i> Weather<span>App</span></h1>
+  <!-- ========== MAIN CARD ========== -->
+  <main class="app-container">
 
-      <form id="searchForm" class="search-section">
-        <div class="search-wrapper">
+    <!-- Search Header -->
+    <div class="search-panel">
+      <div class="search-row">
+        <div class="search-wrapper" id="searchWrapper">
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="searchInput" placeholder="Search a city..." autocomplete="off">
-          <button class="geo-btn" id="geoBtn" type="button" aria-label="Use my location">
+          <button class="geo-btn" id="geoBtn" type="button" title="Use my location">
             <i class="fas fa-location-dot"></i>
           </button>
         </div>
-        <div class="suggestions" id="suggestions"></div>
-        <div class="search-controls">
-          <div class="recent-cities" id="recentCities"></div>
-          <span class="unit-toggle" id="unitToggle">
-            <span class="unit active" data-unit="metric">°C</span>
-            <span class="unit" data-unit="imperial">°F</span>
-          </span>
-        </div>
-      </form>
-    </header>
-
-    <div class="weather-skeleton" id="skeleton">
-      <div class="sk-card">
-        <div class="sk-icon"></div>
-        <div class="sk-line w-40"></div>
-        <div class="sk-line w-24"></div>
-        <div class="sk-line w-32"></div>
+        <!-- Empty search tooltip -->
+        <div class="empty-tooltip" id="emptyTooltip">Please enter a city name</div>
       </div>
-      <div class="sk-details">
-        <div class="sk-line w-20"></div>
-        <div class="sk-line w-20"></div>
-        <div class="sk-line w-20"></div>
-        <div class="sk-line w-20"></div>
-        <div class="sk-line w-20"></div>
-        <div class="sk-line w-20"></div>
+
+      <!-- Suggestions dropdown -->
+      <div class="suggestions" id="suggestions"></div>
+
+      <!-- Controls row: recent chips + pill toggle -->
+      <div class="controls-row">
+        <div class="recent-chips" id="recentChips"></div>
+        <div class="pill-toggle" id="pillToggle">
+          <span class="pill-option active" data-unit="metric">°C</span>
+          <span class="pill-slider" id="pillSlider"></span>
+          <span class="pill-option" data-unit="imperial">°F</span>
+        </div>
       </div>
     </div>
 
+    <!-- Skeleton Loading -->
+    <div class="skeleton-card" id="skeleton">
+      <div class="sk-row">
+        <div class="sk-shape sk-circle"></div>
+        <div class="sk-shape sk-line w-32"></div>
+      </div>
+      <div class="sk-row">
+        <div class="sk-shape sk-line w-48"></div>
+        <div class="sk-shape sk-line w-24"></div>
+      </div>
+      <div class="sk-grid">
+        <div class="sk-shape sk-line w-16"></div>
+        <div class="sk-shape sk-line w-16"></div>
+        <div class="sk-shape sk-line w-16"></div>
+        <div class="sk-shape sk-line w-16"></div>
+      </div>
+    </div>
+
+    <!-- Weather Display -->
     <div class="weather-card" id="weatherCard" hidden>
-      <div class="weather-main">
-        <div class="weather-left">
-          <div class="weather-icon-container" id="weatherIconContainer">
-            <div class="weather-animated-icon" id="animatedIcon">
-              <i class="fas fa-sun" id="weatherSvgIcon"></i>
-            </div>
+      <div class="weather-body" id="weatherBody">
+
+        <!-- Main info -->
+        <div class="main-info">
+          <div class="weather-icon-wrap">
+            <i class="fas fa-sun" id="mainIcon"></i>
           </div>
-          <div class="weather-temp reveal-stagger">
-            <span id="temperature">--</span><span class="temp-unit">°C</span>
+          <div class="temp-block">
+            <span class="temp-value" id="tempValue">--</span>
+            <span class="temp-unit-label" id="tempUnitLabel">°C</span>
           </div>
-          <p class="weather-condition reveal-stagger" id="condition">--</p>
-          <p class="weather-location reveal-stagger" id="location"><i class="fas fa-map-pin"></i> <span>--</span></p>
+          <p class="condition-text" id="conditionText">--</p>
+          <p class="location-text" id="locationText"><i class="fas fa-map-pin"></i> <span>--</span></p>
         </div>
-        <div class="weather-stats reveal-stagger">
-          <div class="stat-card">
+
+        <!-- Stats grid -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-item">
             <i class="fas fa-temperature-half"></i>
             <span class="stat-label">Feels Like</span>
             <span class="stat-value" id="feelsLike">--°C</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-droplet"></i>
             <span class="stat-label">Humidity</span>
             <span class="stat-value" id="humidity">--%</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-wind"></i>
             <span class="stat-label">Wind</span>
             <span class="stat-value" id="windSpeed">-- km/h</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-eye"></i>
             <span class="stat-label">Visibility</span>
             <span class="stat-value" id="visibility">-- km</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-compress"></i>
             <span class="stat-label">Pressure</span>
             <span class="stat-value" id="pressure">-- hPa</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-sun"></i>
             <span class="stat-label">Sunrise</span>
             <span class="stat-value" id="sunrise">--:--</span>
           </div>
-          <div class="stat-card">
+          <div class="stat-item">
             <i class="fas fa-moon"></i>
             <span class="stat-label">Sunset</span>
             <span class="stat-value" id="sunset">--:--</span>
           </div>
-          <div class="stat-card">
-            <i class="fas fa-leaf"></i>
-            <span class="stat-label">AQI</span>
-            <span class="stat-value" id="aqi">--</span>
-          </div>
         </div>
       </div>
 
-      <div class="forecast-section" id="hourlySection" hidden>
-        <h3><i class="fas fa-clock"></i> Hourly Forecast</h3>
-        <div class="forecast-strip" id="hourlyStrip"></div>
-      </div>
-
+      <!-- 5-Day Forecast -->
       <div class="forecast-section" id="forecastSection" hidden>
-        <h3><i class="fas fa-calendar-week"></i> 5-Day Forecast</h3>
+        <h4 class="forecast-heading"><i class="fas fa-calendar-week"></i> 5-Day Forecast</h4>
         <div class="forecast-strip" id="forecastStrip"></div>
       </div>
     </div>
 
+    <!-- Error Card -->
     <div class="error-card" id="errorCard" hidden>
-      <i class="fas fa-circle-exclamation"></i>
-      <h2>City Not Found</h2>
-      <p id="errorText">Please check the spelling and try again.</p>
+      <i class="fas fa-circle-exclamation error-icon"></i>
+      <h2 class="error-title">Something went wrong</h2>
+      <p class="error-msg" id="errorMsg">Please try again.</p>
+      <button class="retry-btn" id="retryBtn"><i class="fas fa-redo"></i> Retry</button>
     </div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
