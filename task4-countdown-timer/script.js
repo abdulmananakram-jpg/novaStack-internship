@@ -30,16 +30,12 @@ document.querySelectorAll('.preset-btn').forEach((btn) => {
     switch (currentPreset) {
       case 'newyear':
         target = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.style.setProperty('--primary', '#6366f1');
         break;
       case 'birthday':
         target = new Date(now.getFullYear(), now.getMonth() + 1, 15, 0, 0, 0);
-        document.documentElement.setAttribute('data-theme', 'birthday');
         break;
       case 'launch':
         target = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-        document.documentElement.setAttribute('data-theme', 'launch');
         break;
       default:
         datetimeInput.focus();
@@ -137,7 +133,6 @@ function resetAll() {
   setupCard.hidden = false;
   datetimeInput.value = '';
   document.documentElement.setAttribute('data-theme', 'dark');
-  document.documentElement.style.removeProperty('--primary');
   document.querySelectorAll('.preset-btn').forEach((b) => b.classList.remove('active'));
 
   document.querySelectorAll('.flip-inner').forEach((el) => {
@@ -157,7 +152,7 @@ function fireConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+  const colors = ['#2c7da0', '#0b3a53', '#a9d6e5', '#eaf4f4', '#3b82f6', '#8b5cf6'];
   const particles = Array.from({ length: 200 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height - canvas.height,
