@@ -2,7 +2,7 @@ const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
 const mobileMenu = document.getElementById('mobileMenu');
 const sections = document.querySelectorAll('section[id]');
-const navAnchors = document.querySelectorAll('.navbar a[href^="#"]');
+const navAnchors = document.querySelectorAll('.navbar ul a[href^="#"]');
 const themeToggle = document.getElementById('themeToggle');
 const backToTop = document.getElementById('backToTop');
 
@@ -22,7 +22,7 @@ if (!prefersReduced) {
     gsap.fromTo(el,
       { opacity: 0, y: 50 },
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
       }
     );
   });
