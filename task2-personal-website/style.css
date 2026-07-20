@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap');
 
 [data-theme="light"] {
-  --color-base-100: #f2f4f8;
-  --color-base-200: #d9e2ff;
+  --color-base-100: #eaf4f4;
+  --color-base-200: #a9d6e5;
   --color-base-300: #FFFFFF;
-  --color-base-content: #0b1020;
-  --color-primary: #2e5fff;
+  --color-base-content: #071a2a;
+  --color-primary: #2c7da0;
   --color-primary-content: #FFFFFF;
-  --color-secondary: #142a6e;
+  --color-secondary: #0b3a53;
   --color-secondary-content: #FFFFFF;
-  --color-accent: #2e5fff;
+  --color-accent: #2c7da0;
   --color-accent-content: #FFFFFF;
-  --color-neutral: #d9e2ff;
-  --color-neutral-content: #0b1020;
-  --color-info: #2e5fff;
+  --color-neutral: #a9d6e5;
+  --color-neutral-content: #071a2a;
+  --color-info: #2c7da0;
   --color-success: #22C55E;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
