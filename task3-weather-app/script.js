@@ -1,17 +1,19 @@
 /* ============================================================
    WEATHER APP — Main Script
+   Master Prompt: Advanced Animated Weather App
    ============================================================ */
 
 // ============================================================
 // STEP 1: Paste your real OpenWeatherMap API key below
 //         (new keys take up to 2 hours to activate after signup)
 // ============================================================
-const API_KEY = "01ce25d29338e8b878d33e9b78dcc5d1";
+const API_KEY = "PASTE_YOUR_OPENWEATHERMAP_KEY_HERE"; // <-- Replace with your real key
 
 /* ============================================================
    DOM References
    ============================================================ */
 const searchInput     = document.getElementById('searchInput');
+const searchBtn       = document.getElementById('searchBtn');
 const searchWrapper   = document.getElementById('searchWrapper');
 const suggestions     = document.getElementById('suggestions');
 const geoBtn          = document.getElementById('geoBtn');
@@ -47,64 +49,293 @@ const sunset          = document.getElementById('sunset');
 /* ============================================================
    State
    ============================================================ */
-let currentUnit = 'metric';                // 'metric' | 'imperial'
-let currentCity = '';                      // last searched city name
-let cachedWeather = null;                  // holds last weather data (for client-side unit conversion)
-let cachedForecast = null;                 // holds last forecast data
-let recentCities = [];                     // in-memory array (max 5)
-let searchTimeout;                         // debounce timer for suggestions
-let isFetching = false;                    // prevent duplicate fetches
+let currentUnit = 'metric';           // 'metric' | 'imperial' (display only)
+let currentCity = '';                 // last searched city name
+let cachedWeather = null;             // always in METRIC (for client-side conversion)
+let cachedForecast = null;            // always in METRIC
+let recentCities = [];                // in-memory array (max 5)
+let searchTimeout;                    // debounce timer
+let isFetching = false;
 
 /* ============================================================
-   Geolocation on Page Load — auto-fetch if permitted
+   Conversion Helpers — metric stored, convert on display
    ============================================================ */
-function initGeolocation() {
-  if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      showSkeleton();
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=${currentUnit}&appid=${API_KEY}`;
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        processWeatherData(data);
-        searchInput.value = data.name;
-        currentCity = data.name;
-        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=${currentUnit}&appid=${API_KEY}`;
-        const fRes = await fetch(forecastUrl);
-        const fData = await fRes.json();
-        processForecastData(fData);
-        showWeatherCard();
-        addRecentCity(data.name);
-      } catch {
-        hideSkeleton();
-      }
-    },
-    () => { /* user denied — do nothing, show default */ }
-  );
+function toF(c) { return Math.round(c * 9/5 + 32); }
+
+function toMph(ms) { return Math.round(ms * 2.237); }
+
+function toKm(ms) { return Math.round(ms * 3.6); }
+
+function toMi(m) { return (m / 1609).toFixed(1); }
+
+function toKmDisplay(m) { return (m / 1000).toFixed(1); }
+
+/* ============================================================
+   Display Weather — renders using currentUnit (client-side conversion)
+   ============================================================ */
+function displayWeather(data) {
+  // data is always in METRIC from cache
+  const { name, sys, main, weather, wind: w, visibility: vis } = data;
+  const isMetric = currentUnit === 'metric';
+
+  const temp     = isMetric ? Math.round(main.temp) : toF(main.temp);
+  const feels    = isMetric ? `${Math.round(main.feels_like)}°C` : `${toF(main.feels_like)}°F`;
+  const hum      = `${main.humidity}%`;
+  const windVal  = isMetric ? `${toKm(w.speed)} km/h` : `${toMph(w.speed)} mph`;
+  const visText  = isMetric ? `${toKmDisplay(vis)} km` : `${toMi(vis)} mi`;
+  const press    = `${main.pressure} hPa`;
+  const tempU    = isMetric ? '°C' : '°F';
+
+  locationSpan.textContent    = `${name}, ${sys.country}`;
+  conditionText.textContent   = weather[0].description;
+  tempUnitLabel.textContent   = tempU;
+  feelsLike.textContent       = feels;
+  humidity.textContent        = hum;
+  windSpeed.textContent       = windVal;
+  visibility.textContent      = visText;
+  pressure.textContent        = press;
+
+  // Sunrise / Sunset (always local time, unit independent)
+  const sr = new Date(sys.sunrise * 1000);
+  const ss = new Date(sys.sunset * 1000);
+  sunrise.textContent = sr.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+  sunset.textContent  = ss.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+
+  // Count-up animation
+  animateCountUp(tempValue, temp);
+
+  // Icon + idle animation
+  setMainIcon(weather[0].id, weather[0].icon);
+  setIconIdleAnimation(weather[0].id);
 }
 
 /* ============================================================
-   Search — Enter key or search icon click
+   Render 5-Day Forecast — client-side conversion
    ============================================================ */
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    performSearch();
+function renderForecast(data) {
+  // data is always in METRIC
+  const daily = {};
+  data.list.forEach((item) => {
+    const d = item.dt_txt.split(' ')[0];
+    if (!daily[d]) daily[d] = [];
+    daily[d].push(item);
+  });
+
+  const entries = Object.entries(daily).slice(0, 5);
+  forecastStrip.innerHTML = '';
+  const isMetric = currentUnit === 'metric';
+  const sym = '°';
+
+  entries.forEach(([date, items]) => {
+    const mid     = items[Math.floor(items.length / 2)];
+    const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en', { weekday: 'short' });
+    const temps   = items.map(i => i.main.temp);
+    let high = Math.round(Math.max(...temps));
+    let low  = Math.round(Math.min(...temps));
+    if (!isMetric) { high = toF(high); low = toF(low); }
+    const wid = mid.weather[0].id;
+
+    const div = document.createElement('div');
+    div.className = 'forecast-day';
+    div.innerHTML = `
+      <div class="day-name">${dayName}</div>
+      <div class="day-icon">${forecastIcon(wid)}</div>
+      <div class="day-temp">${high}${sym} <span>${low}${sym}</span></div>
+    `;
+    forecastStrip.appendChild(div);
+  });
+
+  forecastSection.hidden = false;
+}
+
+/* ============================================================
+   Count-Up Animation — requestAnimationFrame with ease-out
+   ============================================================ */
+function animateCountUp(el, target) {
+  const start = parseFloat(el.textContent) || 0;
+  const duration = 800;
+  const startTime = performance.now();
+
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    el.textContent = Math.round(start + (target - start) * eased);
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      el.textContent = target;
+      el.classList.add('pop');
+      setTimeout(() => el.classList.remove('pop'), 300);
+    }
   }
+  requestAnimationFrame(tick);
+}
+
+/* ============================================================
+   Set Main Weather Icon — day/night aware
+   ============================================================ */
+function setMainIcon(id, iconCode) {
+  const isNight = iconCode && iconCode.endsWith('n');
+  let iconClass = 'fa-sun';
+
+  if (id >= 200 && id < 300)       iconClass = 'fa-bolt';
+  else if (id >= 300 && id < 400)  iconClass = 'fa-cloud-rain';
+  else if (id >= 500 && id < 600)  iconClass = isNight ? 'fa-cloud-rain' : 'fa-cloud-showers-heavy';
+  else if (id >= 600 && id < 700)  iconClass = 'fa-snowflake';
+  else if (id >= 700 && id < 800)  iconClass = 'fa-smog';
+  else if (id === 800)             iconClass = isNight ? 'fa-moon' : 'fa-sun';
+  else if (id === 801)             iconClass = isNight ? 'fa-cloud-moon' : 'fa-cloud-sun';
+  else                             iconClass = 'fa-cloud';
+
+  mainIcon.className = `fas ${iconClass}`;
+
+  const colorMap = {
+    'fa-sun': '#fbbf24', 'fa-moon': '#c084fc', 'fa-bolt': '#f59e0b',
+    'fa-snowflake': '#93c5fd', 'fa-cloud-showers-heavy': '#60a5fa',
+    'fa-cloud-rain': '#60a5fa',
+  };
+  mainIcon.style.color = colorMap[iconClass] || 'var(--text-secondary)';
+}
+
+/* ============================================================
+   Idle Icon Animation — subtle continuous motion per condition
+   ============================================================ */
+function setIconIdleAnimation(id) {
+  iconWrap.className = 'weather-icon-wrap';
+  if (id >= 200 && id < 300)            iconWrap.classList.add('idle-pulse');  // thunder — pulse
+  else if (id >= 300 && id < 600)       iconWrap.classList.add('idle-drip');   // rain — drip
+  else if (id >= 600 && id < 700)       iconWrap.classList.add('idle-float');  // snow — float
+  else                                  iconWrap.classList.add('idle-float');  // default
+}
+
+/* ============================================================
+   Dynamic Background Theme — weather + day/night
+   ============================================================ */
+function updateTheme(data) {
+  const { weather, sys } = data;
+  const now = Math.floor(Date.now() / 1000);
+  const isDay = now >= sys.sunrise && now < sys.sunset;
+  const id = weather[0].id;
+
+  let cls = 'theme-clear-day';
+  if (id >= 200 && id < 300)            cls = 'theme-thunderstorm';
+  else if (id >= 300 && id < 600)       cls = 'theme-rainy';
+  else if (id >= 600 && id < 700)       cls = 'theme-snowy';
+  else if (id >= 700 && id < 800)       cls = 'theme-mist';
+  else if (id >= 801 && id <= 804)      cls = 'theme-cloudy';
+  else if (id === 800)                  cls = isDay ? 'theme-clear-day' : 'theme-clear-night';
+
+  document.body.className = cls;
+}
+
+/* ============================================================
+   Forecast Icon Helper
+   ============================================================ */
+function forecastIcon(id) {
+  if (id >= 200 && id < 300) return '<i class="fas fa-bolt" style="color:#f59e0b"></i>';
+  if (id >= 300 && id < 600) return '<i class="fas fa-cloud-rain" style="color:#60a5fa"></i>';
+  if (id >= 600 && id < 700) return '<i class="fas fa-snowflake" style="color:#93c5fd"></i>';
+  if (id >= 700 && id < 800) return '<i class="fas fa-smog" style="color:#94a3b8"></i>';
+  if (id === 800) return '<i class="fas fa-sun" style="color:#fbbf24"></i>';
+  if (id === 801) return '<i class="fas fa-cloud-sun" style="color:#94a3b8"></i>';
+  return '<i class="fas fa-cloud" style="color:#94a3b8"></i>';
+}
+
+/* ============================================================
+   Fetch Weather — always in metric, cache for unit toggle
+   ============================================================ */
+async function fetchWeather(city) {
+  if (isFetching) return;
+  isFetching = true;
+  showSkeleton();
+
+  // Always fetch in METRIC for client-side conversion
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      if (res.status === 404) throw new Error('City not found — please check the spelling and try again.');
+      if (res.status === 401) throw new Error('Invalid API key. Get a free key at openweathermap.org.');
+      if (res.status === 429) throw new Error('Too many requests — please wait a moment and try again.');
+      throw new Error(`Something went wrong (Error ${res.status}). Please try again.`);
+    }
+    const data = await res.json();
+    cachedWeather = data;
+    displayWeather(data);
+    currentCity = data.name;
+    addRecentCity(data.name);
+    updateTheme(data);
+
+    // Fetch forecast (always metric)
+    const fUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`;
+    try {
+      const fRes = await fetch(fUrl);
+      const fData = await fRes.json();
+      cachedForecast = fData;
+      renderForecast(fData);
+    } catch {
+      forecastSection.hidden = true;
+    }
+
+    showWeatherCard();
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    isFetching = false;
+  }
+}
+
+/* ============================================================
+   Geolocation — auto-fetch on page load + button
+   ============================================================ */
+
+// Shared handler for geo position
+async function handleGeoPosition(pos) {
+  showSkeleton();
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=metric&appid=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    cachedWeather = data;
+    displayWeather(data);
+    searchInput.value = data.name;
+    currentCity = data.name;
+
+    const fUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=metric&appid=${API_KEY}`;
+    const fRes = await fetch(fUrl);
+    const fData = await fRes.json();
+    cachedForecast = fData;
+    renderForecast(fData);
+
+    showWeatherCard();
+    addRecentCity(data.name);
+  } catch {
+    showError('Could not get weather for your location.');
+  }
+}
+
+function initGeolocation() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(handleGeoPosition, () => {});
+}
+
+// Geo button
+geoBtn.addEventListener('click', () => {
+  if (!navigator.geolocation) { showError('Geolocation is not supported by your browser.'); return; }
+  navigator.geolocation.getCurrentPosition(
+    handleGeoPosition,
+    () => showError('Location access denied. Please enable permissions.')
+  );
 });
 
-// Also submit on form if wrapped
-document.getElementById('searchForm')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  performSearch();
-});
-
+/* ============================================================
+   Search — Enter key OR search button click
+   ============================================================ */
 function performSearch() {
   const city = searchInput.value.trim();
   if (!city) {
-    // Empty search — shake input + show tooltip
     searchWrapper.classList.add('shake');
     emptyTooltip.classList.add('show');
     setTimeout(() => searchWrapper.classList.remove('shake'), 500);
@@ -116,8 +347,14 @@ function performSearch() {
   fetchWeather(city);
 }
 
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); performSearch(); }
+});
+
+searchBtn.addEventListener('click', performSearch);
+
 /* ============================================================
-   Live Suggestions — debounced
+   Live Suggestions — debounced 300ms
    ============================================================ */
 searchInput.addEventListener('input', () => {
   clearTimeout(searchTimeout);
@@ -158,314 +395,23 @@ async function fetchSuggestions(query) {
 }
 
 /* ============================================================
-   Geolocation Button
-   ============================================================ */
-geoBtn.addEventListener('click', () => {
-  if (!navigator.geolocation) { showError('Geolocation is not supported by your browser.'); return; }
-  showSkeleton();
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=${currentUnit}&appid=${API_KEY}`;
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      processWeatherData(data);
-      searchInput.value = data.name;
-      currentCity = data.name;
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&units=${currentUnit}&appid=${API_KEY}`;
-      const fRes = await fetch(forecastUrl);
-      const fData = await fRes.json();
-      processForecastData(fData);
-      showWeatherCard();
-      addRecentCity(data.name);
-    } catch {
-      showError('Could not get weather for your location.');
-    }
-  }, () => showError('Location access denied. Please enable permissions.'));
-});
-
-/* ============================================================
-   Unit Toggle — sliding pill switch
+   Unit Toggle — sliding pill, client-side conversion, no re-fetch
    ============================================================ */
 pillToggle.addEventListener('click', (e) => {
   const option = e.target.closest('.pill-option');
-  if (!option) return;
-  const unit = option.dataset.unit;
-  if (unit === currentUnit) return;
+  if (!option || option.dataset.unit === currentUnit) return;
 
-  // Update active state
   pillOptions.forEach(o => o.classList.remove('active'));
   option.classList.add('active');
 
-  // Slide the pill
-  const isImperial = unit === 'imperial';
+  const isImperial = option.dataset.unit === 'imperial';
   pillSlider.classList.toggle('right', isImperial);
+  currentUnit = option.dataset.unit;
 
-  currentUnit = unit;
-
-  // Client-side conversion — no re-fetch
-  if (cachedWeather) {
-    updateDisplayWithUnit();
-  }
-  if (cachedForecast) {
-    renderForecast(cachedForecast);
-  }
+  // Re-render from cached metric data
+  if (cachedWeather) displayWeather(cachedWeather);
+  if (cachedForecast) renderForecast(cachedForecast);
 });
-
-/* ============================================================
-   Fetch Weather (main)
-   ============================================================ */
-async function fetchWeather(city) {
-  if (isFetching) return;
-  isFetching = true;
-  showSkeleton();
-
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=${currentUnit}&appid=${API_KEY}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      if (res.status === 404) throw new Error('City not found — please check the spelling and try again.');
-      if (res.status === 401) throw new Error('Invalid API key. Get a free key at openweathermap.org.');
-      if (res.status === 429) throw new Error('Too many requests — please wait a moment and try again.');
-      throw new Error(`Something went wrong (Error ${res.status}). Please try again.`);
-    }
-    const data = await res.json();
-    processWeatherData(data);
-    currentCity = data.name;
-    addRecentCity(data.name);
-    updateTheme(data);
-
-    // Fetch forecast
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=${currentUnit}&appid=${API_KEY}`;
-    try {
-      const fRes = await fetch(forecastUrl);
-      const fData = await fRes.json();
-      processForecastData(fData);
-    } catch {
-      forecastSection.hidden = true;
-    }
-
-    showWeatherCard();
-  } catch (err) {
-    showError(err.message);
-  } finally {
-    isFetching = false;
-  }
-}
-
-/* ============================================================
-   Process Weather Data — cache + display
-   ============================================================ */
-function processWeatherData(data) {
-  cachedWeather = data;
-  displayWeather(data);
-}
-
-function processForecastData(data) {
-  cachedForecast = data;
-  renderForecast(data);
-}
-
-/* ============================================================
-   Display Weather — render all fields
-   ============================================================ */
-function displayWeather(data) {
-  const { name, sys, main, weather, wind: w, visibility: vis } = data;
-  const isMetric = currentUnit === 'metric';
-  const tempU = isMetric ? '°C' : '°F';
-
-  locationSpan.textContent = `${name}, ${sys.country}`;
-  conditionText.textContent = weather[0].description;
-
-  // Count-up animation for temperature
-  animateCountUp(tempValue, Math.round(main.temp));
-  tempUnitLabel.textContent = tempU;
-
-  feelsLike.textContent = `${Math.round(main.feels_like)}${tempU}`;
-  humidity.textContent = `${main.humidity}%`;
-
-  const windVal = isMetric ? Math.round(w.speed * 3.6) : Math.round(w.speed);
-  const windU = isMetric ? 'km/h' : 'mph';
-  windSpeed.textContent = `${windVal} ${windU}`;
-
-  visibility.textContent = isMetric ? `${(vis / 1000).toFixed(1)} km` : `${(vis / 1609).toFixed(1)} mi`;
-  pressure.textContent = `${main.pressure} hPa`;
-
-  // Sunrise / Sunset
-  const sr = new Date(sys.sunrise * 1000);
-  const ss = new Date(sys.sunset * 1000);
-  sunrise.textContent = sr.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
-  sunset.textContent = ss.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
-
-  // Icon
-  setMainIcon(weather[0].id, weather[0].icon);
-
-  // Idle animation class based on condition
-  setIconIdleAnimation(weather[0].id);
-}
-
-/* ============================================================
-   Client-Side Unit Conversion — no re-fetch
-   ============================================================ */
-function updateDisplayWithUnit() {
-  if (!cachedWeather) return;
-  // Convert cached metric data to imperial if needed
-  // We re-fetch the display with the stored data
-  displayWeather(cachedWeather);
-}
-
-/* ============================================================
-   Count-Up Animation — 0 → target over ~0.8s
-   ============================================================ */
-function animateCountUp(el, target) {
-  const start = parseFloat(el.textContent) || 0;
-  const isRelevant = target > 5 && start !== target;
-  const duration = 800;
-  const startTime = performance.now();
-
-  function tick(now) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    // Ease out cubic
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(start + (target - start) * eased);
-    el.textContent = current;
-    if (progress < 1) {
-      requestAnimationFrame(tick);
-    } else {
-      el.textContent = target;
-      el.classList.add('pop');
-      setTimeout(() => el.classList.remove('pop'), 300);
-    }
-  }
-  requestAnimationFrame(tick);
-}
-
-/* ============================================================
-   Set Main Icon — based on weather ID + icon code (day/night)
-   ============================================================ */
-function setMainIcon(id, iconCode) {
-  const isNight = iconCode && iconCode.endsWith('n');
-  let iconClass = 'fa-sun';
-
-  if (id >= 200 && id < 300) iconClass = 'fa-bolt';
-  else if (id >= 300 && id < 400) iconClass = 'fa-cloud-rain';
-  else if (id >= 500 && id < 600) iconClass = isNight ? 'fa-cloud-rain' : 'fa-cloud-showers-heavy';
-  else if (id >= 600 && id < 700) iconClass = 'fa-snowflake';
-  else if (id >= 700 && id < 800) iconClass = 'fa-smog';
-  else if (id === 800) iconClass = isNight ? 'fa-moon' : 'fa-sun';
-  else if (id === 801) iconClass = isNight ? 'fa-cloud-moon' : 'fa-cloud-sun';
-  else iconClass = 'fa-cloud';
-
-  mainIcon.className = `fas ${iconClass}`;
-
-  // Color the icon
-  const colorMap = {
-    'fa-sun': '#fbbf24',
-    'fa-moon': '#c084fc',
-    'fa-bolt': '#f59e0b',
-    'fa-snowflake': '#93c5fd',
-    'fa-cloud-showers-heavy': '#60a5fa',
-    'fa-cloud-rain': '#60a5fa',
-  };
-  mainIcon.style.color = colorMap[iconClass] || 'var(--text-secondary)';
-}
-
-/* ============================================================
-   Set Idle Icon Animation — subtle continuous movement
-   ============================================================ */
-function setIconIdleAnimation(id) {
-  iconWrap.className = 'weather-icon-wrap';
-  if (id >= 200 && id < 300) {
-    iconWrap.classList.add('idle-pulse');       // thunder — pulse
-  } else if (id >= 300 && id < 600) {
-    iconWrap.classList.add('idle-drip');          // rain — drip
-  } else if (id >= 600 && id < 700) {
-    iconWrap.classList.add('idle-float');         // snow — float
-  } else if (id === 800 || id === 801) {
-    iconWrap.classList.add('idle-float');         // clear — float
-  } else {
-    iconWrap.classList.add('idle-float');         // default
-  }
-}
-
-/* ============================================================
-   Update Background Theme — based on weather + day/night
-   ============================================================ */
-function updateTheme(data) {
-  const { weather, sys } = data;
-  const now = Math.floor(Date.now() / 1000);
-  const isDay = now >= sys.sunrise && now < sys.sunset;
-  const id = weather[0].id;
-
-  let themeClass = 'theme-clear-day';
-
-  if (id >= 200 && id < 300) {
-    themeClass = 'theme-thunderstorm';
-  } else if (id >= 300 && id < 600) {
-    themeClass = 'theme-rainy';
-  } else if (id >= 600 && id < 700) {
-    themeClass = 'theme-snowy';
-  } else if (id >= 700 && id < 800) {
-    themeClass = 'theme-mist';
-  } else if (id >= 801 && id <= 804) {
-    themeClass = 'theme-cloudy';
-  } else if (id === 800) {
-    themeClass = isDay ? 'theme-clear-day' : 'theme-clear-night';
-  }
-
-  document.body.className = themeClass;
-}
-
-/* ============================================================
-   Five-Day Forecast
-   ============================================================ */
-function renderForecast(data) {
-  // Group by date
-  const daily = {};
-  data.list.forEach((item) => {
-    const date = item.dt_txt.split(' ')[0];
-    if (!daily[date]) daily[date] = [];
-    daily[date].push(item);
-  });
-
-  const entries = Object.entries(daily).slice(0, 5);
-  forecastStrip.innerHTML = '';
-  const unitSymbol = currentUnit === 'metric' ? '°' : '°';
-
-  entries.forEach(([date, items]) => {
-    const mid = items[Math.floor(items.length / 2)];
-    const dayName = new Date(date + 'T12:00:00').toLocaleDateString('en', { weekday: 'short' });
-    const temps = items.map(i => i.main.temp);
-    const high = Math.round(Math.max(...temps));
-    const low = Math.round(Math.min(...temps));
-    const wid = mid.weather[0].id;
-
-    const div = document.createElement('div');
-    div.className = 'forecast-day';
-    div.innerHTML = `
-      <div class="day-name">${dayName}</div>
-      <div class="day-icon">${forecastIcon(wid)}</div>
-      <div class="day-temp">${high}${unitSymbol} <span>${low}${unitSymbol}</span></div>
-    `;
-    forecastStrip.appendChild(div);
-  });
-
-  forecastSection.hidden = false;
-}
-
-/* ============================================================
-   Forecast Icon Helper
-   ============================================================ */
-function forecastIcon(id) {
-  if (id >= 200 && id < 300) return '<i class="fas fa-bolt" style="color:#f59e0b"></i>';
-  if (id >= 300 && id < 600) return '<i class="fas fa-cloud-rain" style="color:#60a5fa"></i>';
-  if (id >= 600 && id < 700) return '<i class="fas fa-snowflake" style="color:#93c5fd"></i>';
-  if (id >= 700 && id < 800) return '<i class="fas fa-smog" style="color:#94a3b8"></i>';
-  if (id === 800) return '<i class="fas fa-sun" style="color:#fbbf24"></i>';
-  if (id === 801) return '<i class="fas fa-cloud-sun" style="color:#94a3b8"></i>';
-  return '<i class="fas fa-cloud" style="color:#94a3b8"></i>';
-}
 
 /* ============================================================
    Recent Cities — in-memory JS array (max 5)
@@ -492,17 +438,13 @@ function renderRecentChips() {
 }
 
 /* ============================================================
-   UI Helpers — Skeleton, Weather Card, Error
+   UI Helpers
    ============================================================ */
 function showSkeleton() {
   skeleton.hidden = false;
   weatherCard.hidden = true;
   errorCard.hidden = true;
   forecastSection.hidden = true;
-}
-
-function hideSkeleton() {
-  skeleton.hidden = true;
 }
 
 function showWeatherCard() {
@@ -521,16 +463,13 @@ function showError(msg) {
   errorMsg.textContent = msg;
 }
 
-// Retry button — re-fetch last city
+// Retry button
 retryBtn.addEventListener('click', () => {
-  if (currentCity) {
-    fetchWeather(currentCity);
-  } else {
-    errorCard.hidden = true;
-  }
+  if (currentCity) fetchWeather(currentCity);
+  else errorCard.hidden = true;
 });
 
 /* ============================================================
-   Init — run on page load
+   Init
    ============================================================ */
 initGeolocation();
