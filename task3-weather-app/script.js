@@ -7,7 +7,7 @@
 // STEP 1: Paste your real OpenWeatherMap API key below
 //         (new keys take up to 2 hours to activate after signup)
 // ============================================================
-const API_KEY = "PASTE_YOUR_OPENWEATHERMAP_KEY_HERE"; // <-- Replace with your real key
+const API_KEY = "01ce25d29338e8b878d33e9b78dcc5d1";
 
 /* ============================================================
    DOM References
